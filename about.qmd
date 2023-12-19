@@ -1,9 +1,22 @@
 ---
-title: "About"
+title: "Wang Huang Han"
+image: profile.jpg
+about: 
+  template: jolla
+  links: 
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/huang-han-harry-wang/
+    - icon: github
+      text: GitHub
+      href: https://github.com/WangHuangHan
 ---
 
-About this site
+Hello! I'm Wang Huang Han, a dedicated data science master's student at the University of Malaya. My passion lies in building strong connections between people and leveraging data-driven insights for positive impact.
 
-```{r}
-1 + 1
-```
+With a background in marketing and banking, I bring a unique blend of skills to the table. Over the past year, I have immersed myself in learning data analytics, machine learning, and deep learning techniques through coursework and collaborative projects. Currently, I'm engaged in research using Google Earth Engine to predict canopy height and carbon stock from remote sensing data—a fascinating intersection of technology and environmental impact.
+
+I thrive as a team player and communicator, qualities honed through my experiences. As a final-year student, I am enthusiastic about contributing and growing in my new career role. I aspire to make a meaningful impact on society for a better world.
+
+Let's connect and explore the possibilities of collaboration and innovation together!
+
