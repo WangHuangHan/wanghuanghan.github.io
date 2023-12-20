@@ -8,6 +8,29 @@ image: "heart.jpeg"
 
 Using machine learning methods---KNN, Random Forest, and Logistic Regression---to predict heart disease diagnosis with patient data.
 
+## Description
+
+Heart disease is the world's leading cause of death, taking around 17.9 million lives yearly, according to the World Health Organization (WHO). Early identification of high-risk individuals is crucial in preventing premature deaths.
+
+Diagnosing heart disease is complex, often relying on patient symptoms and examinations. Analyzing vast clinical data using data science helps us better understand and predict heart disease occurrence.
+
+## Dataset
+
+-   [Heart Disease - UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/45/heart+disease)
+
+Four of the processed files used in this project:
+
+1.  processed.switzerland.data
+2.  processed.cleveland.data
+3.  processed.hungarian.data
+4.  processed.va.data
+
+## Project objectives
+
+-   Analyze the heart disease dataset to find common risk factors and patient groups.
+-   Develop a heart disease prediction system using KNN, RandomForest, and Logistic Regression algorithms.
+-   Assess the performance of the created models.
+
 ```{python}
 #| code-summary: "Import libraries"
 import pandas as pd
@@ -22,10 +45,155 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import cross_val_score
 ```
 
-## Data
+## Data loading & preparation
 
--   [Heart Disease - UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/45/heart+disease)
+-   There are 14 attributes in each dataset
+-   Combined 4 dataset into single dataset
+-   All contain same the same columns (without any header, missing values shown as `?`)
 
 ```{python}
+columns = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak",
+          "slope", "ca", "thal", "disease"]
+sdf = pd.read_csv("processed.switzerland.csv", header=None, names=columns, na_values='?')
+cdf = pd.read_csv("processed.cleveland.csv", header=None, names=columns, na_values='?')
+hdf = pd.read_csv("processed.hungarian.csv", header=None, names=columns, na_values='?')
+vdf = pd.read_csv("processed.va.csv", header=None, names=columns, na_values='?')
 
+df = pd.concat([sdf, cdf, vdf, hdf], ignore_index=True)
+df.disease = df['disease'].apply(lambda x: 1 if x > 0 else 0)
+df
 ```
+
+### Attributes
+
+**Numerical attributes**
+
+-   `age` - age in years, numerical
+
+-   `trestbps` - resting blood pressure (in mm Hg on admission to the hospital)
+
+-   `chol` - cholesterol in mg/dl
+
+-   `thalach` - maximum heart rate achieved
+
+-   `oldpeak` - ST depression induced by exercise relative to rest. 'ST' relates to the positions on the electrocardiographic (ECG) plot.
+
+-   `ca` - number of major vessels (0-3) colored by flouroscopy. Fluoroscopy is one of the most popular non-invasive coronary artery disease diagnosis. It enables the doctor to see the flow of blood through the coronary arteries in order to evaluate the presence of arterial blockages.
+
+**Categorical attributes**
+
+- `sex`- sex
+  - 1 = male
+  - 0 = female
+
+- `cp`- chest pain type
+  - 1 = typical angina
+  - 2 = atypical angina
+  - 3 = non-anginal pain
+  - 4 = asymptomatic
+  
+- `fbs` - fasting blood sugar > 120 mg/dl
+  - 1 = true
+  - 0 = false
+  
+- `restecg` - resting electrocardiographic (ECG) results
+  - 0 = normal
+  - 1 = having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)
+  - 2 = showing probable or definite left ventricular hypertrophy by Estes’ criteria
+
+- `exang` - exercise induced angina. Angina is a type of chest pain caused by reduced blood flow to the heart.
+  - 1 = yes
+  - 0 = no
+
+- `slope` - the slope of the peak exercise ST segment. (ECG)
+  - 1 = upsloping
+  - 2 = flat
+  - 3 = downsloping
+  
+- `thal` - A blood disorder called thalassemia
+  - 3 = normal blood flow
+  - 6 = fixed defect (no blood flow in some part of the heart)
+  - 7 = reversable defect (a blood flow is observed but it is not normal)
+
+- `disease` - refers to the presence of heart disease in the patient. It is integer valued from 0 (no presence) to 4.
+
+## Exploratory data analysis (EDA)
+### Numeric data summary
+```{python}
+# Summary statistics for numeric data
+numeric_cols = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak', 'ca']
+
+numeric_summary = df[numeric_cols].describe().transpose()
+print("Summary Statistics for Numeric Columns:")
+print(numeric_summary)
+
+# Distribution plots for numeric attributes
+plt.figure(figsize=(12, 8))
+
+for i, col in enumerate(numeric_cols, 1):
+    plt.subplot(2, 3, i)
+    sns.histplot(df[col].dropna(), kde=True)
+    plt.title(f'Distribution of {col}')
+
+plt.tight_layout()
+plt.show()
+```
+- **Age:** The average age in the dataset is approximately 53 years, with most individuals falling between 47 and 60 years old. The youngest person is 28 years old, and the oldest is 77 years old.
+
+- **Resting Blood Pressure (trestbps):** The average resting blood pressure is around 132 mm Hg, with readings typically ranging from 120 to 140 mm Hg. However, there seem to be some unusually low values (minimum at 0) that might need further investigation.
+
+- **Cholesterol (chol):** The average cholesterol level is about 199 mg/dl, with most values spanning between 175 and 268 mg/dl. There are also some entries with cholesterol levels recorded as 0, which might need verification.
+
+- **Maximum Heart Rate Achieved (thalach):** On average, the maximum heart rate achieved is approximately 138 bpm, with the majority falling between 120 and 157 bpm.
+
+- **ST Depression (oldpeak):** The ST depression induced by exercise relative to rest averages around 0.88. The values range from -2.6 to 6.2.
+
+- **Number of Major Vessels (ca):** There are fewer data points available for the number of major vessels. On average, it appears that the dataset has about 0.68 major vessels colored by fluoroscopy, with values ranging from 0 to 3.
+
+**Generate a heatmap** to display the correlations between different numeric attributes in heart disease dataset, helping to identify potential relationships or dependencies between these features.
+
+```{python}
+# Compute the correlation matrix
+corr_matrix = df[numeric_cols].corr()
+
+# Create a heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f', square=True)
+plt.title('Correlation Heatmap of Numeric Features')
+plt.show()
+```
+
+## Categorical data summary
+```{python}
+# Categorical data summary with count plots
+categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal', 'disease']
+
+plt.figure(figsize=(12, 10))
+
+for i, col in enumerate(categorical_cols, 1):
+    plt.subplot(3, 3, i)
+    sns.countplot(data=df, x=col)
+    plt.title(f'Count Plot of {col}')
+
+plt.tight_layout()
+plt.show()
+```
+
+### Different risk factors affect heart disease
+```{python}
+plt.figure(figsize=(12, 10))
+
+for i, col in enumerate(numeric_cols, 1):
+    plt.subplot(2, 3, i)
+    sns.boxplot(x='disease', y=col, data=df)
+    plt.title(f'{col.capitalize()} vs Disease')
+
+plt.tight_layout()
+plt.show()
+```
+
+**From numerical attributes**
+
+- 
+
+
