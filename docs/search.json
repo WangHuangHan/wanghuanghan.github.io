@@ -18,7 +18,7 @@
     "href": "posts/heart disease prediction/heart-disease.html",
     "title": "Heart Disease Prediction",
     "section": "",
-    "text": "Using machine learning methods—KNN, Random Forest, and Logistic Regression—to predict heart disease diagnosis with patient data.\nCode\nimport pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nimport scipy.stats as stats\nimport palettable\nimport seaborn as sns\nfrom sklearn.ensemble import RandomForestRegressor\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.model_selection import cross_val_score"
+    "text": "Using machine learning methods—KNN, Random Forest, and Logistic Regression—to predict heart disease diagnosis with patient data.\nImport libraries\nimport pandas as pd\nimport numpy as np\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nimport scipy.stats as stats\nimport palettable\nimport seaborn as sns\nfrom sklearn.ensemble import RandomForestRegressor\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.model_selection import cross_val_score"
   },
   {
     "objectID": "posts/heart disease prediction/heart-disease.html#data",

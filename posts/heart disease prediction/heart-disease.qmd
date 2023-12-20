@@ -9,6 +9,7 @@ image: "heart.jpeg"
 Using machine learning methods---KNN, Random Forest, and Logistic Regression---to predict heart disease diagnosis with patient data.
 
 ```{python}
+#| code-summary: "Import libraries"
 import pandas as pd
 import numpy as np
 import seaborn as sns
