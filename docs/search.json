@@ -25,6 +25,6 @@
     "href": "posts/post with plot/index.html",
     "title": "Post With Plot",
     "section": "",
-    "text": "This is a post with plot.\n\nplot(mtcars$mpg)"
+    "text": "This is a post with plot.\n\n\nCode\nplot(mtcars$mpg)"
   }
 ]
