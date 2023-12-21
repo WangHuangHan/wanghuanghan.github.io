@@ -248,7 +248,7 @@ print(numeric_summary)
 
 - **Number of Major Vessels (ca):** Individuals with heart disease tend to have a higher number of major vessels colored by fluoroscopy. The median number of major vessels for those with heart disease (1) is higher than for those without heart disease (0).
 
-- **Outliers:**  In 'trestbps' and 'chol' columns, 'trestbps' displays an outlier with a minimum value of 0, while 'chol' has outliers represented by zero values in both categories, which may require further investigation due to their deviation from expected physiological ranges.
+- **Outliers:** In 'trestbps' and 'chol' columns, 'trestbps' displays an outlier with a minimum value of 0, while 'chol' has outliers represented by zero values in both categories, which may require further investigation due to their deviation from expected physiological ranges.
 
 ```{python}
 # Generate stacked barcharts for each categorical value compared to heart disease
@@ -349,6 +349,5 @@ print(na_values_percent)
 ```
 ### Data cleaning
 Remove missing values.
-
 
 

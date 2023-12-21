@@ -165,6 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data preparation</a>
   <ul class="collapse">
   <li><a href="#find-incorrect-values" id="toc-find-incorrect-values" class="nav-link" data-scroll-target="#find-incorrect-values">Find incorrect values</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data cleaning</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -747,6 +748,7 @@ ca       count                     165.000000                 144.000000
 <li><p><strong>Maximum Heart Rate Achieved (thalach):</strong> Those without heart disease generally achieve higher maximum heart rates compared to those with heart disease. The median maximum heart rate for individuals without heart disease (151 bpm) is higher than for those with heart disease (128 bpm).</p></li>
 <li><p><strong>ST Depression (oldpeak):</strong> The magnitude of ST depression induced by exercise relative to rest appears significantly higher in individuals with heart disease. The median ST depression for those with heart disease (1.05) is notably greater compared to those without heart disease (0).</p></li>
 <li><p><strong>Number of Major Vessels (ca):</strong> Individuals with heart disease tend to have a higher number of major vessels colored by fluoroscopy. The median number of major vessels for those with heart disease (1) is higher than for those without heart disease (0).</p></li>
+<li><p><strong>Outliers:</strong> In ‘trestbps’ and ‘chol’ columns, ‘trestbps’ displays an outlier with a minimum value of 0, while ‘chol’ has outliers represented by zero values in both categories, which may require further investigation due to their deviation from expected physiological ranges.</p></li>
 </ul>
 <div class="cell" data-execution_count="9">
 <details open="">
@@ -831,9 +833,9 @@ ca       count                     165.000000                 144.000000
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> x: (x, <span class="bu">round</span>(x <span class="op">/</span> <span class="bu">len</span>(df_missing) <span class="op">*</span> <span class="dv">100</span>, <span class="dv">2</span>)))</span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the missing value percentages</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>na_values_percent.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">1</span>]).plot.bar(title<span class="op">=</span><span class="st">'Percentage of Missing/Incorrect Values in Columns'</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>na_values_percent.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">1</span>]).plot.bar(title<span class="op">=</span><span class="st">'Percentage of Missing Values in each Column'</span>)</span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Columns'</span>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage of Missing/Incorrect Values'</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage of Missing Values'</span>)</span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotating the bars with values</span></span>
 <span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, val <span class="kw">in</span> <span class="bu">enumerate</span>(na_values_percent.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">1</span>])):</span>
@@ -867,6 +869,10 @@ disease         (0, 0.0)
 dtype: object</code></pre>
 </div>
 </div>
+</section>
+<section id="data-cleaning" class="level3">
+<h3 class="anchored" data-anchor-id="data-cleaning">Data cleaning</h3>
+<p>Remove missing values.</p>
 
 
 </section>
