@@ -11,4 +11,3 @@ This is a post with plot.
 ```{r}
 plot(mtcars$mpg)
 ```
-
