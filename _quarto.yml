@@ -25,6 +25,9 @@ format:
     code-tools: false
     code-block-bg: true
     code-block-border-left: "#31BAE9"
+    grid:
+      body-width: 950px
+      margin-width: 200px
 
 editor: visual
 

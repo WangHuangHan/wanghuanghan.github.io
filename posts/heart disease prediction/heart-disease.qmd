@@ -42,9 +42,14 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 import palettable
 import seaborn as sns
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 ```
 
 
@@ -291,7 +296,7 @@ plt.show()
 
 - **Thalassemia (Thal):** Reversible defect thalassemia (thal=7) shows a higher percentage (80.21%) of heart disease compared to other types of thalassemia.
 
-### EDA Summary
+### Summary of EDA
 Insights from the Exploratory Data Analysis:
 
 - **Age Factor:** Individuals diagnosed with heart disease tend to be older than those without the condition, suggesting age as a contributing risk factor for heart disease.
@@ -348,6 +353,184 @@ plt.show()
 print(na_values_percent)
 ```
 ### Data cleaning
-Remove missing values.
+Set incorrect values to NaN and find out duplicate values to remove.
+```{python}
+# Create a copy of the dataframe to handle missing values and duplicates
+df_clean = df.copy()
 
+# Replace incorrect values with NaN in specific columns
+df_clean['chol'] = df['chol'].replace({0: np.nan})
+df_clean['trestbps'] = df['trestbps'].replace({0: np.nan})
+df_clean.loc[df['oldpeak'] < 0, 'oldpeak'] = np.nan
+
+# Display the count of missing values before cleaning
+print("Missing Values Before Cleaning:")
+print(df.isnull().sum())
+
+# Remove duplicate rows
+duplicate_rows = df_clean[df_clean.duplicated()]
+print("\nDuplicate Rows:")
+print(duplicate_rows)
+
+# Drop duplicate rows
+df_clean.drop_duplicates(inplace=True)
+
+# Display the count of missing values after cleaning
+print("\nMissing Values After Cleaning:")
+print(df_clean.isnull().sum())
+```
+
+
+## Feature engineering
+### Data imputation
+```{python}
+# Columns for mode imputation
+mode_cols = ['restecg', 'exang', 'fbs', 'slope', 'thal']
+
+# Columns for median imputation
+median_cols = ['oldpeak', 'trestbps', 'thalach', 'chol', 'ca']
+
+# Impute missing values with mode for mode_cols
+mode_imputer = SimpleImputer(strategy='most_frequent')
+df_clean[mode_cols] = mode_imputer.fit_transform(df_clean[mode_cols])
+
+# Impute missing values with median for median_cols
+median_imputer = SimpleImputer(strategy='median')
+df_clean[median_cols] = median_imputer.fit_transform(df_clean[median_cols])
+
+# Verify the imputed values
+print("Missing Values After Imputation:")
+print(df_clean.isnull().sum())
+```
+```{python}
+# Check the number of rows after data imputation
+num_rows_after_imputation = df_clean.shape[0]
+print(f"Number of rows after data imputation: {num_rows_after_imputation}")
+```
+Before doing data split, the total number of rows are 918 since only removed 2 duplicate rows.
+
+### One-hot encoding
+It's important to apply One-Hot Encoding before splitting data into training and testing sets. Doing this ensures that each set is independently encoded, preventing any mixing of information between them. This separation is important because it helps the model learn and make predictions correctly without being influenced by how the data was divided.
+```{python}
+# Categorical columns for one-hot encoding
+categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal']
+
+# Apply one-hot encoding
+df_encoded = pd.get_dummies(df_clean, columns=categorical_cols)
+
+# Display the first few rows to verify the encoding
+print(df_encoded.head())
+```
+
+### Feature scaling & Split dataset
+**Normalization / Standardization**
+While ML algorithms like Random Forest, linear regression, logistic regression, and neural networks don't require scaling, it's crucial for Distance algorithms such as KNN, K-means, and SVM.
+
+To accommodate this, I'll split the dataset: one portion for KNN and logistic regression, where normalization is employed, and another for RF modeling, where scaling isn't necessary.
+
+**70% for Train & 30% for Test**
+```{python}
+# Select numerical attributes for scaling
+numerical_cols = ['age', 'oldpeak', 'chol', 'thalach', 'trestbps']
+
+# Extract features and target variable
+X = df_encoded.drop('disease', axis=1)
+y = df_encoded['disease']
+
+# Splitting the dataset into train and test sets (70% train, 30% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Separate the numerical columns for scaling
+X_train_numeric = X_train[numerical_cols]
+X_test_numeric = X_test[numerical_cols]
+
+# Feature scaling for numerical attributes for KNN and Logistic Regression
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train_numeric)
+X_test_scaled = scaler.transform(X_test_numeric)
+
+# Replace the scaled numerical columns in the train and test sets for KNN and Logistic Regression
+X_train_scaled = pd.DataFrame(X_train_scaled, columns=numerical_cols, index=X_train.index)
+X_test_scaled = pd.DataFrame(X_test_scaled, columns=numerical_cols, index=X_test.index)
+
+X_train_knn_logreg = X_train.copy()
+X_test_knn_logreg = X_test.copy()
+
+X_train_knn_logreg[numerical_cols] = X_train_scaled
+X_test_knn_logreg[numerical_cols] = X_test_scaled
+```
+
+
+## Modeling
+### K-Nearest Neighbors (KNN)
+```{python}
+knn = KNeighborsClassifier()
+knn.fit(X_train_knn_logreg, y_train)
+y_pred_knn = knn.predict(X_test_knn_logreg)
+```
+### Logistic Regression
+```{python}
+log_reg = LogisticRegression()
+log_reg.fit(X_train_knn_logreg, y_train)
+y_pred_log_reg = log_reg.predict(X_test_knn_logreg)
+```
+### Random Forest (data used without scaling)
+```{python}
+rf = RandomForestClassifier()
+rf.fit(X_train, y_train)
+y_pred_rf = rf.predict(X_test)
+```
+
+
+## Evaluation models performance
+```{python}
+models = {
+    "KNN": (y_test, y_pred_knn),
+    "Logistic Regression": (y_test, y_pred_log_reg),
+    "Random Forest": (y_test, y_pred_rf)
+}
+
+for model_name, (true, pred) in models.items():
+    accuracy = accuracy_score(true, pred)
+    precision = precision_score(true, pred)
+    recall = recall_score(true, pred)
+    f1 = f1_score(true, pred)
+    auc = roc_auc_score(true, pred)
+    
+    print(f"Metrics for {model_name}:")
+    print(f"Accuracy: {accuracy:.4f}")
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print(f"F1 Score: {f1:.4f}")
+    print(f"AUC Score: {auc:.4f}")
+    
+    # Confusion Matrix
+    cm = confusion_matrix(true, pred)
+    print("Confusion Matrix:")
+    print(cm)
+    print("\n")
+```
+
+```{python}
+# Define a function to plot confusion matrix
+def plot_confusion(y_true, y_pred, title):
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(6, 4))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+    plt.title(title)
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.show()
+
+# Assuming you have predictions for each model (y_pred_knn, y_pred_logreg, y_pred_rf) and y_test available
+
+# Plot confusion matrix for KNN
+plot_confusion(y_test, y_pred_knn, 'Confusion Matrix - KNN')
+
+# Plot confusion matrix for Logistic Regression
+plot_confusion(y_test, y_pred_log_reg, 'Confusion Matrix - Logistic Regression')
+
+# Plot confusion matrix for Random Forest
+plot_confusion(y_test, y_pred_rf, 'Confusion Matrix - Random Forest')
+```
 
