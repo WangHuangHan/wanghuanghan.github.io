@@ -405,7 +405,7 @@ print(df_clean.isnull().sum())
 num_rows_after_imputation = df_clean.shape[0]
 print(f"Number of rows after data imputation: {num_rows_after_imputation}")
 ```
-Before doing data split, the total number of rows are 918 since only removed 2 duplicate rows.
+The total number of rows before the data split was 920. Since only two duplicate rows were removed, the remaining rows became 918.
 
 ### One-hot encoding
 It's important to apply One-Hot Encoding before splitting data into training and testing sets. Doing this ensures that each set is independently encoded, preventing any mixing of information between them. This separation is important because it helps the model learn and make predictions correctly without being influenced by how the data was divided.
