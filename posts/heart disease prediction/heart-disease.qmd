@@ -14,6 +14,7 @@ Heart disease is the world's leading cause of death, taking around 17.9 million 
 
 Diagnosing heart disease is complex, often relying on patient symptoms and examinations. Analyzing vast clinical data using data science helps us better understand and predict heart disease occurrence.
 
+
 ## Dataset
 
 -   [Heart Disease - UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/45/heart+disease)
@@ -24,6 +25,7 @@ Four of the processed files used in this project:
 2.  processed.cleveland.data
 3.  processed.hungarian.data
 4.  processed.va.data
+
 
 ## Project objectives
 
@@ -45,7 +47,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import cross_val_score
 ```
 
-## Data loading & preparation
+
+## Data loading
 
 -   There are 14 attributes in each dataset
 -   Combined 4 dataset into single dataset
@@ -115,7 +118,8 @@ df
   - 6 = fixed defect (no blood flow in some part of the heart)
   - 7 = reversable defect (a blood flow is observed but it is not normal)
 
-- `disease` - refers to the presence of heart disease in the patient. It is integer valued from 0 (no presence) to 4.
+- `disease` - refers to the presence of heart disease in the patient. It is integer valued from 0 (no presence) to 4. In this single dataset, '0' signifies the absence of heart disease, while '1' indicates diagnosed heart disease.
+
 
 ## Exploratory data analysis (EDA)
 ### Numeric data summary
@@ -163,7 +167,7 @@ plt.title('Correlation Heatmap of Numeric Features')
 plt.show()
 ```
 
-## Categorical data summary
+### Categorical data summary
 ```{python}
 # Categorical data summary with count plots
 categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal', 'disease']
@@ -178,9 +182,37 @@ for i, col in enumerate(categorical_cols, 1):
 plt.tight_layout()
 plt.show()
 ```
+```{python}
+#| code-fold: true
+#| code-summary: "Counts for each categorical attribute"
+#categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal', 'disease']
+
+#for col in categorical_cols:
+#    counts = df[col].value_counts()
+#    print(f"Value counts for {col}:")
+#    print(counts)
+#    print()
+```
+
+- **Sex:** There are 726 instances of the value 1.0 (male) and 194 instances of the value 0.0 (female) in the 'sex' column.
+
+- **Chest Pain Type (cp):** 496 instances of type 4 (asymptomatic), 204 instances of type 3 (non-anginal pain), 174 instances of type 2 (atypical angina), and 46 instances of type 1 (typical angina).
+
+- **Fasting Blood Sugar (fbs):** 692 instances with a value of 0.0 (fasting blood sugar <= 120 mg/dl) and 138 instances with a value of 1.0 (fasting blood sugar > 120 mg/dl).
+
+- **Resting Electrocardiographic Results (restecg):** 551 instances with a value of 0.0 (normal), 188 instances with a value of 2.0 (showing probable or definite left ventricular hypertrophy by Estes’ criteria), and 179 instances with a value of 1.0 (having ST-T wave abnormality).
+
+- **Exercise Induced Angina (exang):** 528 instances with a value of 0.0 (no exercise-induced angina) and 337 instances with a value of 1.0 (presence of exercise-induced angina).
+
+- **Slope of Peak Exercise ST Segment (slope):** 345 instances with a value of 2.0 (a flat slope), 203 instances with a value of 1.0 (an upsloping slope), and 63 instances with a value of 3.0 (a downsloping slope).
+
+- **Thalassemia (thal):** 196 instances with a value of 3.0 (normal blood flow), 192 instances with a value of 7.0 (reversible defect), and 46 instances with a value of 6.0 (fixed defect).
+
+- **Presence of Heart Disease (disease):** 509 instances with a value of 1 (presence of heart disease) and 411 instances with a value of 0 (absence of heart disease).
 
 ### Different risk factors affect heart disease
 ```{python}
+# Display boxplots for each numerical attribute and presence of heart disease 
 plt.figure(figsize=(12, 10))
 
 for i, col in enumerate(numeric_cols, 1):
@@ -191,9 +223,132 @@ for i, col in enumerate(numeric_cols, 1):
 plt.tight_layout()
 plt.show()
 ```
+```{python}
+# Grouping by 'disease' and describing numeric attributes
+numeric_summary = df.groupby('disease')[numeric_cols].describe().transpose()
 
-**From numerical attributes**
+# Renaming the columns for clarity
+numeric_summary.columns = ['non-heart disease (disease=0)', 'heart disease (disease=1)']
 
-- 
+# Displaying the summary table
+print(numeric_summary)
+```
+
+**From numerical attributes:**
+
+- **Age:** Individuals with heart disease tend to be older on average compared to those without. The median age for individuals with heart disease (57 years) is higher than for those without (51 years).
+
+- **Resting Blood Pressure (trestbps):** While the mean resting blood pressure appears slightly higher for individuals with heart disease, there's overlap in the interquartile ranges, suggesting variability. However, there seem to be some unusual zero values for blood pressure in the heart disease group that might need further examination.
+
+- **Cholesterol (chol):** There's a notable difference in cholesterol levels between the two groups. Individuals without heart disease have higher median cholesterol levels (228 mg/dl) compared to those with heart disease (218 mg/dl). However, there are zero values present in both groups that might need clarification.
+
+- **Maximum Heart Rate Achieved (thalach):** Those without heart disease generally achieve higher maximum heart rates compared to those with heart disease. The median maximum heart rate for individuals without heart disease (151 bpm) is higher than for those with heart disease (128 bpm).
+
+- **ST Depression (oldpeak):** The magnitude of ST depression induced by exercise relative to rest appears significantly higher in individuals with heart disease. The median ST depression for those with heart disease (1.05) is notably greater compared to those without heart disease (0).
+
+- **Number of Major Vessels (ca):** Individuals with heart disease tend to have a higher number of major vessels colored by fluoroscopy. The median number of major vessels for those with heart disease (1) is higher than for those without heart disease (0).
+
+- **Outliers:**  In 'trestbps' and 'chol' columns, 'trestbps' displays an outlier with a minimum value of 0, while 'chol' has outliers represented by zero values in both categories, which may require further investigation due to their deviation from expected physiological ranges.
+
+```{python}
+# Generate stacked barcharts for each categorical value compared to heart disease
+categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal']
+
+plt.figure(figsize=(15, 12))
+
+for i, col in enumerate(categorical_cols, 1):
+    plt.subplot(3, 3, i)
+    ct = pd.crosstab(df[col], df['disease'], normalize='index') * 100
+    plot = ct.plot(kind='bar', stacked=True, ax=plt.gca())
+    plt.title(f'{col.capitalize()} vs Disease')
+    plt.ylabel('Percentage')
+    plt.xlabel(col.capitalize())
+    plt.legend(title='Disease', labels=['No Disease', 'Heart Disease'])
+    plt.xticks(rotation=0)
+    
+    for p in plot.patches:
+        width, height = p.get_width(), p.get_height()
+        x, y = p.get_xy() 
+        plt.text(x + width / 2, 
+                 y + height / 2, 
+                 f'{height:.2f}%', 
+                 horizontalalignment='center', 
+                 verticalalignment='center')
+
+plt.tight_layout()
+plt.show()
+```
+
+**From categorical attributes:**
+
+- **Sex:** Females (sex=0) show a lower percentage of heart disease (25.77%) compared to males (sex=1) with a higher percentage (63.22%).
+
+- **Chest Pain Type (Cp):** Asymptomatic chest pain type (cp=4) displays a significantly higher percentage (79.03%) of heart disease, while typical angina (cp=1) has a lower percentage (43.48%).
+
+- **Fasting Blood Sugar (Fbs):** Individuals with fasting blood sugar greater than 120 mg/dl (fbs=1) tend to have a notably higher percentage (68.12%) of heart disease compared to those with lower fasting blood sugar.
+
+- **Exercise Induced Angina (Exang):** Individuals experiencing exercise-induced angina (exang=1) demonstrate a notably higher percentage (83.68%) of heart disease compared to those without it.
+
+- **Thalassemia (Thal):** Reversible defect thalassemia (thal=7) shows a higher percentage (80.21%) of heart disease compared to other types of thalassemia.
+
+### EDA Summary
+Insights from the Exploratory Data Analysis:
+
+- **Age Factor:** Individuals diagnosed with heart disease tend to be older than those without the condition, suggesting age as a contributing risk factor for heart disease.
+
+- **Chest Pain Types:** Asymptomatic chest pain (cp=4) presents a notably higher prevalence of heart disease, while typical angina (cp=1) exhibits a lower association with heart conditions.
+
+- **Cholesterol and Heart Disease:** While cholesterol levels vary, individuals without heart disease often exhibit higher median cholesterol levels than those with the condition, although zero values in both groups require further validation.
+
+- **Exercise-Induced Angina:** The presence of exercise-induced angina (exang=1) demonstrates a significantly higher likelihood of heart disease compared to its absence (exang=0).
+
+- **Gender Disparity:** Males (sex=1) tend to show a higher percentage of heart disease cases (63.22%) compared to females (sex=0) with a lower prevalence (25.77%).
+
+- **Fasting Blood Sugar (FBS):** Elevated fasting blood sugar (>120 mg/dl) correlates with a higher percentage of heart disease instances (68.12%) compared to lower levels.
+
+- **Resting Blood Pressure and Heart Disease:** Resting blood pressure, though variable, shows a trend toward higher values for heart disease cases, though outliers (0 values) necessitate further investigation.
+
+
+## Data preparation
+### Find incorrect values
+1. Cholesterol (chol) contains lots of zero values.
+
+2. ST Depression (oldpeak) gets some negetive values.
+
+3. Resting Blood Pressure (trestbps) has one zero value.
+
+**Count and plot those incorrect (missing) values.**
+```{python}
+# Create a copy of the dataframe to handle missing values
+df_missing = df.copy()
+
+# Replace incorrect values with NaN in specific columns
+df_missing['chol'] = df['chol'].replace({0: np.nan})
+df_missing['trestbps'] = df['trestbps'].replace({0: np.nan})
+df_missing.loc[df['oldpeak'] < 0, 'oldpeak'] = np.nan
+
+# Calculate missing value counts and percentages
+na_values_percent = df_missing.isna().sum().sort_values(ascending=False) \
+    .apply(lambda x: (x, round(x / len(df_missing) * 100, 2)))
+
+# Plotting the missing value percentages
+na_values_percent.apply(lambda x: x[1]).plot.bar(title='Percentage of Missing Values in each Column')
+plt.xlabel('Columns')
+plt.ylabel('Percentage of Missing Values')
+
+# Annotating the bars with values
+for i, val in enumerate(na_values_percent.apply(lambda x: x[1])):
+    plt.text(i, val + 1, f"{val}%", ha='center', va='bottom')
+
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Display the count and percentage of missing/incorrect values
+print(na_values_percent)
+```
+### Data cleaning
+Remove missing values.
+
 
 

@@ -151,17 +151,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description">Description</a></li>
   <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset">Dataset</a></li>
   <li><a href="#project-objectives" id="toc-project-objectives" class="nav-link" data-scroll-target="#project-objectives">Project objectives</a></li>
-  <li><a href="#data-loading-preparation" id="toc-data-loading-preparation" class="nav-link" data-scroll-target="#data-loading-preparation">Data loading &amp; preparation</a>
+  <li><a href="#data-loading" id="toc-data-loading" class="nav-link" data-scroll-target="#data-loading">Data loading</a>
   <ul class="collapse">
   <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
   </ul></li>
   <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">Exploratory data analysis (EDA)</a>
   <ul class="collapse">
   <li><a href="#numeric-data-summary" id="toc-numeric-data-summary" class="nav-link" data-scroll-target="#numeric-data-summary">Numeric data summary</a></li>
-  </ul></li>
-  <li><a href="#categorical-data-summary" id="toc-categorical-data-summary" class="nav-link" data-scroll-target="#categorical-data-summary">Categorical data summary</a>
-  <ul class="collapse">
+  <li><a href="#categorical-data-summary" id="toc-categorical-data-summary" class="nav-link" data-scroll-target="#categorical-data-summary">Categorical data summary</a></li>
   <li><a href="#different-risk-factors-affect-heart-disease" id="toc-different-risk-factors-affect-heart-disease" class="nav-link" data-scroll-target="#different-risk-factors-affect-heart-disease">Different risk factors affect heart disease</a></li>
+  <li><a href="#eda-summary" id="toc-eda-summary" class="nav-link" data-scroll-target="#eda-summary">EDA Summary</a></li>
+  </ul></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data preparation</a>
+  <ul class="collapse">
+  <li><a href="#find-incorrect-values" id="toc-find-incorrect-values" class="nav-link" data-scroll-target="#find-incorrect-values">Find incorrect values</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -245,8 +248,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 </section>
-<section id="data-loading-preparation" class="level2">
-<h2 class="anchored" data-anchor-id="data-loading-preparation">Data loading &amp; preparation</h2>
+<section id="data-loading" class="level2">
+<h2 class="anchored" data-anchor-id="data-loading">Data loading</h2>
 <ul>
 <li>There are 14 attributes in each dataset</li>
 <li>Combined 4 dataset into single dataset</li>
@@ -538,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>6 = fixed defect (no blood flow in some part of the heart)</li>
 <li>7 = reversable defect (a blood flow is observed but it is not normal)</li>
 </ul></li>
-<li><code>disease</code> - refers to the presence of heart disease in the patient. It is integer valued from 0 (no presence) to 4.</li>
+<li><code>disease</code> - refers to the presence of heart disease in the patient. It is integer valued from 0 (no presence) to 4. In this single dataset, ‘0’ signifies the absence of heart disease, while ‘1’ indicates diagnosed heart disease.</li>
 </ul>
 </section>
 </section>
@@ -607,9 +610,8 @@ ca        309.0    0.676375    0.935653   0.0    0.0    0.0    1.0    3.0</code>
 </div>
 </div>
 </section>
-</section>
-<section id="categorical-data-summary" class="level2">
-<h2 class="anchored" data-anchor-id="categorical-data-summary">Categorical data summary</h2>
+<section id="categorical-data-summary" class="level3">
+<h3 class="anchored" data-anchor-id="categorical-data-summary">Categorical data summary</h3>
 <div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
@@ -630,29 +632,241 @@ ca        309.0    0.676375    0.935653   0.0    0.0    0.0    1.0    3.0</code>
 <p><img src="heart-disease_files/figure-html/cell-6-output-1.png" width="1142" height="950"></p>
 </div>
 </div>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Counts for each categorical attribute</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal', 'disease']</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#for col in categorical_cols:</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#    counts = df[col].value_counts()</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    print(f"Value counts for {col}:")</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#    print(counts)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    print()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li><p><strong>Sex:</strong> There are 726 instances of the value 1.0 (male) and 194 instances of the value 0.0 (female) in the ‘sex’ column.</p></li>
+<li><p><strong>Chest Pain Type (cp):</strong> 496 instances of type 4 (asymptomatic), 204 instances of type 3 (non-anginal pain), 174 instances of type 2 (atypical angina), and 46 instances of type 1 (typical angina).</p></li>
+<li><p><strong>Fasting Blood Sugar (fbs):</strong> 692 instances with a value of 0.0 (fasting blood sugar &lt;= 120 mg/dl) and 138 instances with a value of 1.0 (fasting blood sugar &gt; 120 mg/dl).</p></li>
+<li><p><strong>Resting Electrocardiographic Results (restecg):</strong> 551 instances with a value of 0.0 (normal), 188 instances with a value of 2.0 (showing probable or definite left ventricular hypertrophy by Estes’ criteria), and 179 instances with a value of 1.0 (having ST-T wave abnormality).</p></li>
+<li><p><strong>Exercise Induced Angina (exang):</strong> 528 instances with a value of 0.0 (no exercise-induced angina) and 337 instances with a value of 1.0 (presence of exercise-induced angina).</p></li>
+<li><p><strong>Slope of Peak Exercise ST Segment (slope):</strong> 345 instances with a value of 2.0 (a flat slope), 203 instances with a value of 1.0 (an upsloping slope), and 63 instances with a value of 3.0 (a downsloping slope).</p></li>
+<li><p><strong>Thalassemia (thal):</strong> 196 instances with a value of 3.0 (normal blood flow), 192 instances with a value of 7.0 (reversible defect), and 46 instances with a value of 6.0 (fixed defect).</p></li>
+<li><p><strong>Presence of Heart Disease (disease):</strong> 509 instances with a value of 1 (presence of heart disease) and 411 instances with a value of 0 (absence of heart disease).</p></li>
+</ul>
+</section>
 <section id="different-risk-factors-affect-heart-disease" class="level3">
 <h3 class="anchored" data-anchor-id="different-risk-factors-affect-heart-disease">Different risk factors affect heart disease</h3>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="7">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(numeric_cols, <span class="dv">1</span>):</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">2</span>, <span class="dv">3</span>, i)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(x<span class="op">=</span><span class="st">'disease'</span>, y<span class="op">=</span>col, data<span class="op">=</span>df)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f'</span><span class="sc">{</span>col<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss"> vs Disease'</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display boxplots for each numerical attribute and presence of heart disease </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(numeric_cols, <span class="dv">1</span>):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">2</span>, <span class="dv">3</span>, i)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(x<span class="op">=</span><span class="st">'disease'</span>, y<span class="op">=</span>col, data<span class="op">=</span>df)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f'</span><span class="sc">{</span>col<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss"> vs Disease'</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="heart-disease_files/figure-html/cell-7-output-1.png" width="1142" height="950"></p>
+<p><img src="heart-disease_files/figure-html/cell-8-output-1.png" width="1142" height="950"></p>
 </div>
 </div>
-<p><strong>From numerical attributes</strong></p>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouping by 'disease' and describing numeric attributes</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>numeric_summary <span class="op">=</span> df.groupby(<span class="st">'disease'</span>)[numeric_cols].describe().transpose()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Renaming the columns for clarity</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>numeric_summary.columns <span class="op">=</span> [<span class="st">'non-heart disease (disease=0)'</span>, <span class="st">'heart disease (disease=1)'</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Displaying the summary table</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(numeric_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                non-heart disease (disease=0)  heart disease (disease=1)
+age      count                     411.000000                 509.000000
+         mean                       50.547445                  55.903733
+         std                         9.433700                   8.718959
+         min                        28.000000                  31.000000
+         25%                        43.000000                  51.000000
+         50%                        51.000000                  57.000000
+         75%                        57.000000                  62.000000
+         max                        76.000000                  77.000000
+trestbps count                     391.000000                 470.000000
+         mean                      129.913043                 133.978723
+         std                        16.869867                  20.552278
+         min                        80.000000                   0.000000
+         25%                       120.000000                 120.000000
+         50%                       130.000000                 130.000000
+         75%                       140.000000                 145.000000
+         max                       190.000000                 200.000000
+chol     count                     392.000000                 498.000000
+         mean                      227.905612                 176.479920
+         std                        75.832760                 127.517611
+         min                         0.000000                   0.000000
+         25%                       199.000000                   0.000000
+         50%                       228.000000                 218.000000
+         75%                       269.000000                 267.750000
+         max                       564.000000                 603.000000
+thalach  count                     391.000000                 474.000000
+         mean                      148.800512                 128.261603
+         std                        23.608692                  24.024193
+         min                        69.000000                  60.000000
+         25%                       134.500000                 112.000000
+         50%                       151.000000                 128.000000
+         75%                       167.500000                 145.000000
+         max                       202.000000                 195.000000
+oldpeak  count                     390.000000                 468.000000
+         mean                        0.418205                   1.262607
+         std                         0.715636                   1.197424
+         min                        -1.100000                  -2.600000
+         25%                         0.000000                   0.000000
+         50%                         0.000000                   1.050000
+         75%                         0.800000                   2.000000
+         max                         4.200000                   6.200000
+ca       count                     165.000000                 144.000000
+         mean                        0.278788                   1.131944
+         std                         0.640006                   1.012140
+         min                         0.000000                   0.000000
+         25%                         0.000000                   0.000000
+         50%                         0.000000                   1.000000
+         75%                         0.000000                   2.000000
+         max                         3.000000                   3.000000</code></pre>
+</div>
+</div>
+<p><strong>From numerical attributes:</strong></p>
 <ul>
-<li></li>
+<li><p><strong>Age:</strong> Individuals with heart disease tend to be older on average compared to those without. The median age for individuals with heart disease (57 years) is higher than for those without (51 years).</p></li>
+<li><p><strong>Resting Blood Pressure (trestbps):</strong> While the mean resting blood pressure appears slightly higher for individuals with heart disease, there’s overlap in the interquartile ranges, suggesting variability. However, there seem to be some unusual zero values for blood pressure in the heart disease group that might need further examination.</p></li>
+<li><p><strong>Cholesterol (chol):</strong> There’s a notable difference in cholesterol levels between the two groups. Individuals without heart disease have higher median cholesterol levels (228 mg/dl) compared to those with heart disease (218 mg/dl). However, there are zero values present in both groups that might need clarification.</p></li>
+<li><p><strong>Maximum Heart Rate Achieved (thalach):</strong> Those without heart disease generally achieve higher maximum heart rates compared to those with heart disease. The median maximum heart rate for individuals without heart disease (151 bpm) is higher than for those with heart disease (128 bpm).</p></li>
+<li><p><strong>ST Depression (oldpeak):</strong> The magnitude of ST depression induced by exercise relative to rest appears significantly higher in individuals with heart disease. The median ST depression for those with heart disease (1.05) is notably greater compared to those without heart disease (0).</p></li>
+<li><p><strong>Number of Major Vessels (ca):</strong> Individuals with heart disease tend to have a higher number of major vessels colored by fluoroscopy. The median number of major vessels for those with heart disease (1) is higher than for those without heart disease (0).</p></li>
 </ul>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate stacked barcharts for each categorical value compared to heart disease</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> [<span class="st">'sex'</span>, <span class="st">'cp'</span>, <span class="st">'fbs'</span>, <span class="st">'restecg'</span>, <span class="st">'exang'</span>, <span class="st">'slope'</span>, <span class="st">'thal'</span>]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">12</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, col <span class="kw">in</span> <span class="bu">enumerate</span>(categorical_cols, <span class="dv">1</span>):</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">3</span>, <span class="dv">3</span>, i)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    ct <span class="op">=</span> pd.crosstab(df[col], df[<span class="st">'disease'</span>], normalize<span class="op">=</span><span class="st">'index'</span>) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    plot <span class="op">=</span> ct.plot(kind<span class="op">=</span><span class="st">'bar'</span>, stacked<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>plt.gca())</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f'</span><span class="sc">{</span>col<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss"> vs Disease'</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'Percentage'</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(col.capitalize())</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    plt.legend(title<span class="op">=</span><span class="st">'Disease'</span>, labels<span class="op">=</span>[<span class="st">'No Disease'</span>, <span class="st">'Heart Disease'</span>])</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    plt.xticks(rotation<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> p <span class="kw">in</span> plot.patches:</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        width, height <span class="op">=</span> p.get_width(), p.get_height()</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        x, y <span class="op">=</span> p.get_xy() </span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        plt.text(x <span class="op">+</span> width <span class="op">/</span> <span class="dv">2</span>, </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                 y <span class="op">+</span> height <span class="op">/</span> <span class="dv">2</span>, </span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>                 <span class="ss">f'</span><span class="sc">{</span>height<span class="sc">:.2f}</span><span class="ss">%'</span>, </span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                 horizontalalignment<span class="op">=</span><span class="st">'center'</span>, </span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>                 verticalalignment<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="heart-disease_files/figure-html/cell-10-output-1.png" width="1430" height="1142"></p>
+</div>
+</div>
+<p><strong>From categorical attributes:</strong></p>
+<ul>
+<li><p><strong>Sex:</strong> Females (sex=0) show a lower percentage of heart disease (25.77%) compared to males (sex=1) with a higher percentage (63.22%).</p></li>
+<li><p><strong>Chest Pain Type (Cp):</strong> Asymptomatic chest pain type (cp=4) displays a significantly higher percentage (79.03%) of heart disease, while typical angina (cp=1) has a lower percentage (43.48%).</p></li>
+<li><p><strong>Fasting Blood Sugar (Fbs):</strong> Individuals with fasting blood sugar greater than 120 mg/dl (fbs=1) tend to have a notably higher percentage (68.12%) of heart disease compared to those with lower fasting blood sugar.</p></li>
+<li><p><strong>Exercise Induced Angina (Exang):</strong> Individuals experiencing exercise-induced angina (exang=1) demonstrate a notably higher percentage (83.68%) of heart disease compared to those without it.</p></li>
+<li><p><strong>Thalassemia (Thal):</strong> Reversible defect thalassemia (thal=7) shows a higher percentage (80.21%) of heart disease compared to other types of thalassemia.</p></li>
+</ul>
+</section>
+<section id="eda-summary" class="level3">
+<h3 class="anchored" data-anchor-id="eda-summary">EDA Summary</h3>
+<p>Insights from the Exploratory Data Analysis:</p>
+<ul>
+<li><p><strong>Age Factor:</strong> Individuals diagnosed with heart disease tend to be older than those without the condition, suggesting age as a contributing risk factor for heart disease.</p></li>
+<li><p><strong>Chest Pain Types:</strong> Asymptomatic chest pain (cp=4) presents a notably higher prevalence of heart disease, while typical angina (cp=1) exhibits a lower association with heart conditions.</p></li>
+<li><p><strong>Cholesterol and Heart Disease:</strong> While cholesterol levels vary, individuals without heart disease often exhibit higher median cholesterol levels than those with the condition, although zero values in both groups require further validation.</p></li>
+<li><p><strong>Exercise-Induced Angina:</strong> The presence of exercise-induced angina (exang=1) demonstrates a significantly higher likelihood of heart disease compared to its absence (exang=0).</p></li>
+<li><p><strong>Gender Disparity:</strong> Males (sex=1) tend to show a higher percentage of heart disease cases (63.22%) compared to females (sex=0) with a lower prevalence (25.77%).</p></li>
+<li><p><strong>Fasting Blood Sugar (FBS):</strong> Elevated fasting blood sugar (&gt;120 mg/dl) correlates with a higher percentage of heart disease instances (68.12%) compared to lower levels.</p></li>
+<li><p><strong>Resting Blood Pressure and Heart Disease:</strong> Resting blood pressure, though variable, shows a trend toward higher values for heart disease cases, though outliers (0 values) necessitate further investigation.</p></li>
+</ul>
+</section>
+</section>
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">Data preparation</h2>
+<section id="find-incorrect-values" class="level3">
+<h3 class="anchored" data-anchor-id="find-incorrect-values">Find incorrect values</h3>
+<ol type="1">
+<li><p>Cholesterol (chol) contains lots of zero values.</p></li>
+<li><p>ST Depression (oldpeak) gets some negetive values.</p></li>
+<li><p>Resting Blood Pressure (trestbps) has one zero value.</p></li>
+</ol>
+<p><strong>Count and plot those incorrect (missing) values.</strong></p>
+<div class="cell" data-execution_count="10">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a copy of the dataframe to handle missing values</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df_missing <span class="op">=</span> df.copy()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace incorrect values with NaN in specific columns</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>df_missing[<span class="st">'chol'</span>] <span class="op">=</span> df[<span class="st">'chol'</span>].replace({<span class="dv">0</span>: np.nan})</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>df_missing[<span class="st">'trestbps'</span>] <span class="op">=</span> df[<span class="st">'trestbps'</span>].replace({<span class="dv">0</span>: np.nan})</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>df_missing.loc[df[<span class="st">'oldpeak'</span>] <span class="op">&lt;</span> <span class="dv">0</span>, <span class="st">'oldpeak'</span>] <span class="op">=</span> np.nan</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate missing value counts and percentages</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>na_values_percent <span class="op">=</span> df_missing.isna().<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>) <span class="op">\</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> x: (x, <span class="bu">round</span>(x <span class="op">/</span> <span class="bu">len</span>(df_missing) <span class="op">*</span> <span class="dv">100</span>, <span class="dv">2</span>)))</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the missing value percentages</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>na_values_percent.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">1</span>]).plot.bar(title<span class="op">=</span><span class="st">'Percentage of Missing/Incorrect Values in Columns'</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Columns'</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage of Missing/Incorrect Values'</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotating the bars with values</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, val <span class="kw">in</span> <span class="bu">enumerate</span>(na_values_percent.<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">1</span>])):</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    plt.text(i, val <span class="op">+</span> <span class="dv">1</span>, <span class="ss">f"</span><span class="sc">{</span>val<span class="sc">}</span><span class="ss">%"</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'bottom'</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the count and percentage of missing/incorrect values</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(na_values_percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="heart-disease_files/figure-html/cell-11-output-1.png" width="659" height="470"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ca          (611, 66.41)
+thal        (486, 52.83)
+slope       (309, 33.59)
+chol        (202, 21.96)
+fbs           (90, 9.78)
+oldpeak       (74, 8.04)
+trestbps      (60, 6.52)
+thalach       (55, 5.98)
+exang         (55, 5.98)
+restecg        (2, 0.22)
+cp              (0, 0.0)
+sex             (0, 0.0)
+age             (0, 0.0)
+disease         (0, 0.0)
+dtype: object</code></pre>
+</div>
+</div>
 
 
 </section>
