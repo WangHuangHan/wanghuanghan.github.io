@@ -38,7 +38,10 @@ Usually, the tree structure of a rainforest can be divided into emergents, canop
 Layers of Rainforest with meters. sources from [internet geography](https://www.internetgeography.net/topics/what-is-the-structure-of-the-tropical-rainforest/) & [sciencefacts.net](https://www.sciencefacts.net/layers-of-the-rainforest.html)
 :::
 
-There are some interesting points to note from Figure 3. Tropical canopies, reaching heights of up to 50 meters (about 16-17 floors high), showcase their competitive nature in absorbing sunlight for rapid growth. This is reflected in their thin trunks, making them become giant umbrella-like forms. The canopy layer, constituting the second level of the rainforest, serves as a shield, intercepting light penetrating from the emergent layer above. Approximately 75-98% of light is absorbed here, effectively blocking it from reaching the lower layers. Moreover, the canopy layer acts as a natural reservoir, capturing most rainfall, which limits the amount that reaches the plants in the lower strata. Therefore, life predominantly thrives in this layer, while vegetation below relies on the scant rainfall that trickles down from above.
+There are some interesting points to note from Figure 3. Tropical canopies, reaching heights of up to 50 meters (about 16-17 floors high), showcase their competitive nature in absorbing sunlight for rapid growth. This is reflected in their thin trunks, making them become giant umbrella-like forms. The canopy layer, constituting the second level of the rainforest, serves as a shield, intercepting light penetrating from the emergent layer above. Approximately 75-98% of light is absorbed here, effectively blocking it from reaching the lower layers. 
+
+Moreover, the canopy layer acts as a natural reservoir, capturing most rainfall, which limits the amount that reaches the plants in the lower strata. Therefore, life predominantly thrives in this layer, while vegetation below relies on the scant rainfall that trickles down from above.
+
 
 
 For more study, please refer to [Rainforest - A rainforest is an area of tall trees and a high amount of rainfall](https://education.nationalgeographic.org/resource/rain-forest/) by National Geographic.
