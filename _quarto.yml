@@ -19,6 +19,8 @@ website:
         text: Blog        
     background: "#a514ff"
   favicon: "images/github.png"
+  page-footer: 
+    center: "Copyright © 2023 Wang Huang Han."
   
 format:
   html:
