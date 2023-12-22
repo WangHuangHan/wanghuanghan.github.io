@@ -1139,7 +1139,7 @@ dtype: int64</code></pre>
 <div class="cell" data-execution_count="18">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestClassifier()</span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestClassifier(random_state<span class="op">=</span><span class="dv">37</span>)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>rf.fit(X_train, y_train)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>y_pred_rf <span class="op">=</span> rf.predict(X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -1190,11 +1190,11 @@ AUC Score: 0.7842
 
 
 Metrics for Random Forest:
-Accuracy: 0.7971
-Precision: 0.7939
-Recall: 0.8562
-F1 Score: 0.8239
-AUC Score: 0.7899
+Accuracy: 0.8152
+Precision: 0.8072
+Recall: 0.8758
+F1 Score: 0.8401
+AUC Score: 0.8078
 
 </code></pre>
 </div>
@@ -1212,16 +1212,14 @@ AUC Score: 0.7899
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'Actual'</span>)</span>
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have predictions for each model (y_pred_knn, y_pred_logreg, y_pred_rf) and y_test available</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot confusion matrix for KNN</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>plot_confusion(y_test, y_pred_knn, <span class="st">'Confusion Matrix - KNN'</span>)</span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot confusion matrix for Logistic Regression</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>plot_confusion(y_test, y_pred_log_reg, <span class="st">'Confusion Matrix - Logistic Regression'</span>)</span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot confusion matrix for Random Forest</span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>plot_confusion(y_test, y_pred_rf, <span class="st">'Confusion Matrix - Random Forest'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot confusion matrix for KNN</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>plot_confusion(y_test, y_pred_knn, <span class="st">'Confusion Matrix - KNN'</span>)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot confusion matrix for Logistic Regression</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>plot_confusion(y_test, y_pred_log_reg, <span class="st">'Confusion Matrix - Logistic Regression'</span>)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot confusion matrix for Random Forest</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>plot_confusion(y_test, y_pred_rf, <span class="st">'Confusion Matrix - Random Forest'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="heart-disease_files/figure-html/cell-21-output-1.png" width="489" height="376"></p>

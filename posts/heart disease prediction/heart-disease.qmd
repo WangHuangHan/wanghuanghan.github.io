@@ -474,7 +474,7 @@ y_pred_log_reg = log_reg.predict(X_test_knn_logreg)
 ```
 ### Random Forest (data used without scaling)
 ```{python}
-rf = RandomForestClassifier()
+rf = RandomForestClassifier(random_state=37)
 rf.fit(X_train, y_train)
 y_pred_rf = rf.predict(X_test)
 ```
@@ -527,25 +527,25 @@ plot_confusion(y_test, y_pred_rf, 'Confusion Matrix - Random Forest')
 
 **The table display the model evaluation comparison.**
 
-| Model              | Accuracy | Recall | Precision | F1 Score | AUC Score |
-|--------------------|----------|--------|-----------|----------|-----------|
-| KNN                | 0.8043   | 0.8954 | 0.7829    | 0.8354   | 0.7932    |
-| Logistic Regression| 0.7935   | 0.8693 | 0.7824    | 0.8235   | 0.7842    |
-| **Random Forest**      | **0.8261**   | 0.8954 | 0.8107    | 0.8509   | 0.8176    |
+| Model                | Accuracy | Recall | Precision | F1 Score | AUC Score |
+|----------------------|----------|--------|-----------|----------|-----------|
+| KNN                  | 0.8043   | 0.8954 | 0.7829    | 0.8354   | 0.7932    |
+| Logistic Regression  | 0.7935   | 0.8693 | 0.7824    | 0.8235   | 0.7842    |
+| **Random Forest**    |**0.8152**| 0.8758 | 0.8072    | 0.8401   | 0.8078    |
 
-- Accuracy Comparison: Random Forest achieved the highest accuracy (82.61%), outperforming both KNN (80.43%) and Logistic Regression (79.35%).
+- Accuracy Comparison: Random Forest achieved the highest accuracy (81.52%), outperforming both KNN (80.43%) and Logistic Regression (79.35%).
 
-- Precision and Recall: Random Forest and KNN showed similar recall rates (89.54%), indicating their ability to capture positive cases, while Random Forest exhibited higher precision (81.07%) compared to KNN (78.29%) and Logistic Regression (78.24%).
+- Precision and Recall: Random Forest and KNN showed similar recall rates (89.54%), indicating their ability to capture positive cases, while Random Forest exhibited higher precision (80.72%) compared to KNN (78.29%) and Logistic Regression (78.24%).
 
-- F1 Score: Random Forest yielded the highest F1 score (85.09%), signifying a balanced performance between precision and recall, followed by KNN (83.54%) and Logistic Regression (82.35%).
+- F1 Score: Random Forest yielded the highest F1 score (84.01%), signifying a balanced performance between precision and recall, followed by KNN (83.54%) and Logistic Regression (82.35%).
 
-- AUC Score: Random Forest had the highest AUC score (81.76%), indicating its capability to distinguish between classes better than KNN (79.32%) and Logistic Regression (78.42%).
+- AUC Score: Random Forest had the highest AUC score (80.78%), indicating its capability to distinguish between classes better than KNN (79.32%) and Logistic Regression (78.42%).
 
 - **Random Forest Model:** Overall, Random Forest demonstrated superior performance across multiple metrics, showcasing its robustness in predicting heart disease compared to the other models.
 
 
 ## Conclusion
-- Employing KNN, Logistic Regression, and Random Forest algorithms, models were constructed to predict heart disease with accuracies ranging between 79.35% and 82.61%. Notably, the Random Forest model emerged as the most effective model, exhibiting an accuracy of 82.61% and an F1 score of 85.09%, showcasing its robustness in identifying heart disease cases.
+- Employing KNN, Logistic Regression, and Random Forest algorithms, models were constructed to predict heart disease with accuracies ranging between 79.35% and 81.52%. Notably, the Random Forest model emerged as the most effective model, exhibiting an accuracy of 81.52% and an F1 score of 84.01%, showcasing its robustness in identifying heart disease cases.
 
 - Through comprehensive exploratory data analysis (EDA), important insights were revealed. Factors such as age, chest pain type, cholesterol levels, and exercise-induced angina showed notable correlations with the presence of heart disease. Visualizing these relationships aided in understanding risk factors associated with heart conditions.
 
