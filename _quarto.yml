@@ -17,7 +17,9 @@ website:
       - icon: newspaper
         href: blog.qmd
         text: Blog        
+    background: "#a514ff"
   favicon: "images/github.png"
+  
 format:
   html:
     theme: 
