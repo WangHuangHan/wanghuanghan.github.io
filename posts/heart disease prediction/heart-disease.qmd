@@ -535,7 +535,7 @@ plot_confusion(y_test, y_pred_rf, 'Confusion Matrix - Random Forest')
 
 - Accuracy Comparison: Random Forest achieved the highest accuracy (81.52%), outperforming both KNN (80.43%) and Logistic Regression (79.35%).
 
-- Precision and Recall: Random Forest and KNN showed similar recall rates (89.54%), indicating their ability to capture positive cases, while Random Forest exhibited higher precision (80.72%) compared to KNN (78.29%) and Logistic Regression (78.24%).
+- Precision and Recall: Random Forest and KNN showed similar recall rates of 87.58%, signifying their proficiency in capturing positive cases. However, Random Forest showcased superior precision at 80.72% compared to KNN's 78.29% and Logistic Regression's 78.24%. This highlights Random Forest's better balance between precision and recall in correctly identifying positive cases while minimizing false positives.
 
 - F1 Score: Random Forest yielded the highest F1 score (84.01%), signifying a balanced performance between precision and recall, followed by KNN (83.54%) and Logistic Regression (82.35%).
 

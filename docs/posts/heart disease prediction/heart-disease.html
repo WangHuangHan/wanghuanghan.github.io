@@ -1234,11 +1234,11 @@ AUC Score: 0.8078
 <p><strong>The table display the model evaluation comparison.</strong></p>
 <table class="table">
 <colgroup>
-<col style="width: 28%">
-<col style="width: 14%">
+<col style="width: 30%">
+<col style="width: 13%">
 <col style="width: 11%">
 <col style="width: 15%">
-<col style="width: 14%">
+<col style="width: 13%">
 <col style="width: 15%">
 </colgroup>
 <thead>
@@ -1270,26 +1270,26 @@ AUC Score: 0.8078
 </tr>
 <tr class="odd">
 <td><strong>Random Forest</strong></td>
-<td><strong>0.8261</strong></td>
-<td>0.8954</td>
-<td>0.8107</td>
-<td>0.8509</td>
-<td>0.8176</td>
+<td><strong>0.8152</strong></td>
+<td>0.8758</td>
+<td>0.8072</td>
+<td>0.8401</td>
+<td>0.8078</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li><p>Accuracy Comparison: Random Forest achieved the highest accuracy (82.61%), outperforming both KNN (80.43%) and Logistic Regression (79.35%).</p></li>
-<li><p>Precision and Recall: Random Forest and KNN showed similar recall rates (89.54%), indicating their ability to capture positive cases, while Random Forest exhibited higher precision (81.07%) compared to KNN (78.29%) and Logistic Regression (78.24%).</p></li>
-<li><p>F1 Score: Random Forest yielded the highest F1 score (85.09%), signifying a balanced performance between precision and recall, followed by KNN (83.54%) and Logistic Regression (82.35%).</p></li>
-<li><p>AUC Score: Random Forest had the highest AUC score (81.76%), indicating its capability to distinguish between classes better than KNN (79.32%) and Logistic Regression (78.42%).</p></li>
+<li><p>Accuracy Comparison: Random Forest achieved the highest accuracy (81.52%), outperforming both KNN (80.43%) and Logistic Regression (79.35%).</p></li>
+<li><p>Precision and Recall: Random Forest and KNN showed similar recall rates of 87.58%, signifying their proficiency in capturing positive cases. However, Random Forest showcased superior precision at 80.72% compared to KNN’s 78.29% and Logistic Regression’s 78.24%. This highlights Random Forest’s better balance between precision and recall in correctly identifying positive cases while minimizing false positives.</p></li>
+<li><p>F1 Score: Random Forest yielded the highest F1 score (84.01%), signifying a balanced performance between precision and recall, followed by KNN (83.54%) and Logistic Regression (82.35%).</p></li>
+<li><p>AUC Score: Random Forest had the highest AUC score (80.78%), indicating its capability to distinguish between classes better than KNN (79.32%) and Logistic Regression (78.42%).</p></li>
 <li><p><strong>Random Forest Model:</strong> Overall, Random Forest demonstrated superior performance across multiple metrics, showcasing its robustness in predicting heart disease compared to the other models.</p></li>
 </ul>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <ul>
-<li><p>Employing KNN, Logistic Regression, and Random Forest algorithms, models were constructed to predict heart disease with accuracies ranging between 79.35% and 82.61%. Notably, the Random Forest model emerged as the most effective model, exhibiting an accuracy of 82.61% and an F1 score of 85.09%, showcasing its robustness in identifying heart disease cases.</p></li>
+<li><p>Employing KNN, Logistic Regression, and Random Forest algorithms, models were constructed to predict heart disease with accuracies ranging between 79.35% and 81.52%. Notably, the Random Forest model emerged as the most effective model, exhibiting an accuracy of 81.52% and an F1 score of 84.01%, showcasing its robustness in identifying heart disease cases.</p></li>
 <li><p>Through comprehensive exploratory data analysis (EDA), important insights were revealed. Factors such as age, chest pain type, cholesterol levels, and exercise-induced angina showed notable correlations with the presence of heart disease. Visualizing these relationships aided in understanding risk factors associated with heart conditions.</p></li>
 <li><p>The data preparation phase involved handling missing values, erroneous entries, and duplicates. Feature engineering encompassed imputation of missing values, one-hot encoding for categorical variables, and scaling for suitable algorithms, ensuring the data was ready for modeling.</p></li>
 <li><p>The significance of various attributes in predicting heart disease was evident. Numeric attributes like age, cholesterol levels, and ST depression were influential, while categorical features such as chest pain type and thalassemia also played crucial roles. Random Forest, exhibiting superior performance, emphasized the importance of these features in predicting heart disease.</p></li>
