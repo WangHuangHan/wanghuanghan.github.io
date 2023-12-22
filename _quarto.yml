@@ -6,13 +6,16 @@ website:
   title: "Data Scientist Life"
   navbar:
     left:
-      - href: index.qmd
+      - icon: houses
+        href: index.qmd
         text: Home
       #- href: about.qmd
       #  text: About
-      - href: projects.qmd
+      - icon: robot
+        href: projects.qmd
         text: Projects
-      - href: blog.qmd
+      - icon: newspaper
+        href: blog.qmd
         text: Blog        
   favicon: "images/github.png"
 format:
