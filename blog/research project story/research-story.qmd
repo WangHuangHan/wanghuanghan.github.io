@@ -1,0 +1,53 @@
+---
+title: "Fascinating Malaysia Biodiversity - Research Motivation"
+author: "Huang Han Wang"
+date: "2023-12-22"
+categories: [malaysia, biodiversity, research]
+image: "image1.jpg"
+---
+
+![Rainforest Discovery Center (RDC) @Sepilok, Malaysia](image1.jpg){#fig-RDC}
+
+## Introduction
+
+The story all starts from here, in east Malaysia Borneo island. In Chinese, there is an old quote saying that "天地有大美而不言" by the Chinese philosopher Zhuangzi, which means the universe and the mother earth have their natural beauty, but they won't say any word to others. There is such a word in English: Extraordinary meaning beyond normal and surpassing ordinary. Also, in Bahasa Melayu, "Luarbiasa" contains the same meaning: luar means further away, and biasa means ordinary.
+
+The first time I visited the tropical rainforest, I was amazed by the **HUGE** things there. For instance, anything is big here: trees, leaves, flowers, fruits, and creatures (like ants, orangutans, birds, and so on). My 5-day rainforest journey, organized by [Society of Wilderness Malaysia](https://facebook.com/sowmorg), began from the *1st to 5th March 2023*, and this also motivates me to engage more in nature conservation efforts.
+
+
+## Insights
+
+There are many beautiful parts of the Malaysian rainforest. In this article, I am going to talk about three parts: "Tree Canopy," "Creatures," and "My Observation."
+
+Malaysia is well known for its rich biodiversity. Let's be ready and dive into it together!
+
+### Tree Canopy
+
+When it comes to rainforests, the lungs of the earth and the "broccoli" tree pop up in my mind. 
+
+![Canopy Walkway in RDC @Sepilok, Malaysia](image2.jpg){#fig-CanopyWalk width=60%}
+
+Usually, the tree structure of a rainforest can be divided into emergents, canopy, under canopy, and shrub layers ranging from 0 meters to over 50 meters. Thus, most reserve areas set up a canopy walkway to make it easier for people to observe nature; as Figure 2 displays, the trunks of the trees are typically thin in the rainforest. However, they also compete with each other to reach as high as possible to absorb abundant sunlight. 
+
+::: {#fig-structure layout-ncol=2}
+
+![Height of Rainforest](image3.jpg){#fig-height}
+
+![Layers of Rainforest](image4.jpg){#fig-layer}
+
+Layers of Rainforest with meters. sources from [internet geography](https://www.internetgeography.net/topics/what-is-the-structure-of-the-tropical-rainforest/) & [sciencefacts.net](https://www.sciencefacts.net/layers-of-the-rainforest.html)
+:::
+
+
+For more study, please refer to [Rainforest - A rainforest is an area of tall trees and a high amount of rainfall](https://education.nationalgeographic.org/resource/rain-forest/) by National Geographic.
+
+### Creatures
+
+### My observation
+
+## Summary
+
+Malaysia is uniquely blessed. It is located at the intersection of East and West, including Chinese, Islamic, Indian, and Western cultures. There are many cultural and natural resources around here.
+
+
+
