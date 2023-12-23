@@ -107,17 +107,34 @@ From what I heard from Calvin Soh, the President of the Society of Wilderness Ma
 
 ![Orangutan at Sepilok Orangutan Rehabilitation Centre @Sepilok](image15.jpg){#fig-safeorangutan}
 
-Both orangutan and 
+Both images were taken during food time, and orangutans and proboscis monkeys were conserved in the reserved area.
 :::
 
-### My Observation
-#### Deforestation in Borneo Island
+By contrast, it is more exciting for me to observe the animals in the wild since we have to be focused and enjoy every moment when doing a safari. I noticed that wild animals, such as orangutans and proboscis monkeys, are more active and lively than those in the conversation area. Most importantly, wild animals grow bigger than animals in conserved regions.
 
-#### Trees play an essential role in **carbon storage**
+To sum up, rich biodiversity is the only word that pops up in my mind, and many pictures are still stored on my device and memorized in my mind. Thus, rainforests and canopies play an essential role in their habitat. One of the purposes of writing this article is to raise awareness among the public and be informed of the beauty of nature.
+
+### My Observation
+#### **Deforestation in Borneo Island**
+After those lovely animals, let's discuss some serious issues as I try to engage more in this topic. Unavoidably, when it comes to global warming, trees and forests often come to the discussion table. 
+
+There are some significant data to show.
+
+![Tree distribution area map in Borneo from 1950 to 2020 (prediction).source from Hugo Ahlenius online](image16.jpg){#fig-deforestation width=70%}
+
+![Deforestation in Borneo (hectares). source from Rhett A. Butler online](image17.jpg){#fig-deforestation width=70%}
+
+In Malaysia, the primary forest and tree cover data showcases distinct perspectives on forest landscapes. The primary forest cover in 2001 stood at 10,611,815 hectares, whereas by 2020, it had declined to 8,708,737 hectares, indicating a significant loss of 1,903,078 hectares or approximately 17.9%. This reduction is a cause for concern, representing a considerable portion of Malaysia's original forested areas.
+
+Conversely, when assessing the broader tree cover across Malaysia, the figures reflect a similar trend but encompass a larger expanse. In 2001, the total tree cover was noted at 18,164,118 hectares, which then diminished to 15,243,971 hectares by 2020, revealing a loss of 4,403,860 hectares or around 24.2% over the period between 2002 and 2019.
+
+The primary forest remains undisturbed, vital for biodiversity and ecosystem stability, while tree cover includes disturbed areas like logged or altered land. Deforestation due to agriculture, logging, and urbanization primarily affects primary forests. Yet, changes in tree cover may involve reforestation or secondary growth, offsetting some losses. Distinguishing between them is crucial: primary forest loss poses an immediate threat to ecosystems, needing targeted conservation. Meanwhile, broader tree cover changes encompass various land use shifts, demanding comprehensive forest management strategies. Both are vital for understanding forest dynamics and their impact on biodiversity and the environment.
+
+#### **Trees play an essential role in carbon storage**
 
 In my research, carbon storage from canopy
 
-#### **Satellites Imageries** can help in this matter
+#### **Satellite Imageries can help with this matter**
 
 
 
