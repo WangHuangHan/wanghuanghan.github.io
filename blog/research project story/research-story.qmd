@@ -132,17 +132,69 @@ The primary forest remains undisturbed, vital for biodiversity and ecosystem sta
 
 #### **Trees play an essential role in carbon storage**
 
-In my research, carbon storage from canopy
+Now, after discussing the deforestation issue around Borneo Island, let's dive into how important it is for trees to absorb carbon. I must say trees and the ocean are critically crucial for carbon stock regarding global warming. We will prove it in Figure 12 below.
+
+::: {#fig-structure layout-ncol=2}
+
+![Carbon Storage Circle](image18.jpg){#fig-carboncircle}
+
+![Carbon Budget (2007-2016)](image19.jpg){#fig-carbonbudget}
+
+Carbon storage (circle) and carbon budget. sources from [Scottish Centre for Carbon Storage](http://www.scifun.ed.ac.uk/pages/about_us/shows_research.html) & [Global Carbon Budget](https://www.globalcarbonproject.org/carbonbudget/archive/2016/GCP_CarbonBudget_2016.pdf)
+:::
+
+From both images, atmospheric carbon dioxide (CO2) is absorbed mainly by land sinks, which are trees, grass, and earth, and then the ocean sink plays a secondary role in digesting CO2.
+
+As we notice, plants and the ocean can use photosynthesis to recycle CO2. After photosynthesis, carbon dioxide is stored in the earth as fossil carbon in geological reservoirs.
+
+However, during the ten years (2007-2016), human release of carbon dioxide was far more than land and ocean stores. Fossil fuels and industry contain most of it, three times more than trees store for carbon stock.
+
+Overall, the importance of photosynthesis from trees allows the planet to recycle carbon dioxide and release oxygen back. In the tropical rainforest regions, the logging industry and industry development are the main issues to be solved. 
+
+After understanding the carbon recycle flow figure, let's explain more about the components of the tree. This is also related to above-ground biomass density (AGBD), which refers to the weight of living things like trees and plants above the soil. It's a measure of how much greenery exists in a specific area. AGB helps us understand the amount of carbon stored in forests, which is crucial for fighting climate change. Measuring AGB is like weighing the 'green power' of trees, showing how much they help keep our planet healthy.
+
+::: {#fig-structure layout-ncol=2}
+
+![The chemical composition of wood](image20.jpg){#fig-chemicalcomposition}
+
+![Parts of a Tree](image21.jpg){#fig-treepart}
+
+Component of tree. sources from [Matt Russell](https://www.linkedin.com/pulse/50-trees-biomass-carbon-whats-other-half-matt-russell) & [Georgette Kilgore](https://8billiontrees.com/trees/parts-of-a-tree)
+:::
+
+As the pictures show, it's obvious that half of the tree's biomass is carbon, followed by oxygen, at around 44%. This is also said by Ralph Dubayah (NASA GEDI Mission Principal Investigator). The green power of trees contains carbon not only in the wood but also in their leaves, twigs, branches, roots, and so on.
+
+Understanding the tree's above-ground biomass density (AGBD) becomes essential—it measures the greenery's weight, indicative of carbon storage critical for addressing climate change. Trees' green power, containing roughly half of their biomass as carbon, underscores their immense contribution to our planet's health and fight against climate change.
 
 #### **Satellite Imageries can help with this matter**
 
+Nowadays, as technology and computation power grow, it is possible to rely on big data processing to deal with in-time abundant satellite image data with high-resolution quality.
 
+::: {#fig-structure layout-ncol=2}
+
+![Satellite above the Earth](image22.jpg){#fig-Satellite}
+
+![Simulation of GEDI lasers collecting data](image23.jpg){#fig-GEDI}
+
+The power of satellite images data. sources from [UMD](https://www.maaproject.org/2022/gedi-amazon-carbon)
+:::
+
+[NASA's GEDI](https://gedi.umd.edu/) (Global Ecosystem Dynamics Investigation) mission is a groundbreaking initiative employing advanced laser technology aboard the International Space Station. GEDI precisely measures the height of Earth's forests, providing accurate data on L2A canopy top height. This technology revolutionizes forest monitoring by offering detailed information on forest structure and biomass. Traditional methods for measuring canopy height and above-ground biomass density (AGBD) involved ground-based measurements or aerial surveys, which were time-consuming and less comprehensive.
+
+GEDI's innovative approach allows for global coverage, overcoming the limitations of ground-based techniques. By using lasers to measure canopy height, GEDI generates highly accurate 3D maps of forests, offering insights into their structure and carbon storage potential. This satellite-based method significantly enhances our understanding of forests' carbon storage capacity and their role in mitigating climate change.
+
+Comparing traditional methods to GEDI's satellite approach, the latter provides a broader, more consistent, and cost-effective way to assess forests globally. It offers continuous monitoring, whereas ground-based methods often cover limited areas and can be labor-intensive. GEDI's data allows scientists to track changes in canopy height and AGBD over time, enabling better forest management strategies crucial for preserving our planet's health.
+
+This is also an intriguing way for me to figure out a new way to measure carbon stock instead of human power needed and time-consuming. Exploring this innovative method to measure carbon stock is not just about replacing labor-intensive processes; it represents a leap forward in efficiency and accuracy. With GEDI's precise data on canopy height and biomass, assessing carbon storage becomes streamlined, allowing for more comprehensive and timely monitoring. This shift from traditional methods to satellite-based technology is not only forward-thinking but also empowers us to better protect and sustain our planet's invaluable forests.
 
 ## Summary
+![Observing nature through my binoculars.](image24.jpg){#fig-binoculars}
 
-Malaysia is uniquely blessed. It is located at the intersection of East and West, including Chinese, Islamic, Indian, and Western cultures. There are many cultural and natural resources around here.
+Reflecting on my journey in Malaysia, it’s the blend of cultures and rich biodiversity that makes this country unique. With influences from East and West—Chinese, Islamic, Indian, and Western—the mix of traditions and natural beauty creates a diverse and fascinating landscape.
 
-Nature is our teacher. We live here, grow here and learnig from mother earth.
+Exploring this diverse and nature-rich country has been an eye-opening experience. Nature acts as our best teacher, guiding and teaching us invaluable lessons through its vast biodiversity—towering rainforests and captivating wildlife.
+
+The topic, “Fascinating Malaysia Biodiversity,” encourages us to eagerly anticipate and cherish each moment. It’s a reminder to value and protect the delicate balance of life on our planet, nurturing a harmonious relationship between humans and nature. In this connection, we find not just fascination but a deep sense of appreciation and responsibility toward our incredible natural world.
 
 
 
