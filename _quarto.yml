@@ -16,10 +16,13 @@ website:
         text: Projects
       - icon: newspaper
         href: blog.qmd
-        text: Blog        
+        text: Blog 
+      - icon: people
+        href: culture.qmd
+        text: Culture         
     background: "#a514ff"
   favicon: "images/github.png"
-  page-footer: 
+  page-footer:
     center: "Copyright © 2023 Wang Huang Han."
   
 format:
