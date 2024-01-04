@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Huang Han Wang">
+<meta name="dcterms.date" content="2024-01-05">
+
+<title>Data Scientist Life - Canopy Height and Carbon Stock Prediction Using Satellite Images with Machine Learning on GEE</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/github.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Data Scientist Life</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target=""><i class="bi bi-houses" role="img">
+</i> 
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html" rel="" target=""><i class="bi bi-robot" role="img">
+</i> 
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target=""><i class="bi bi-newspaper" role="img">
+</i> 
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../culture.html" rel="" target=""><i class="bi bi-people" role="img">
+</i> 
+ <span class="menu-text">Culture</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description">Description</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#setup-and-installation" id="toc-setup-and-installation" class="nav-link" data-scroll-target="#setup-and-installation">Setup and Installation</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data Sources</a></li>
+  <li><a href="#project-model-structure" id="toc-project-model-structure" class="nav-link" data-scroll-target="#project-model-structure">Project Model Structure</a></li>
+  <li><a href="#minimal-reproducible-example-javascript-code" id="toc-minimal-reproducible-example-javascript-code" class="nav-link" data-scroll-target="#minimal-reproducible-example-javascript-code">Minimal Reproducible Example (JavaScript Code)</a>
+  <ul class="collapse">
+  <li><a href="#section-1-boundary-selection" id="toc-section-1-boundary-selection" class="nav-link" data-scroll-target="#section-1-boundary-selection">Section 1: Boundary Selection</a></li>
+  <li><a href="#section-2-importing-datasets-sentinel-1-sentinel-2-srtm-esa-gedi-l2a" id="toc-section-2-importing-datasets-sentinel-1-sentinel-2-srtm-esa-gedi-l2a" class="nav-link" data-scroll-target="#section-2-importing-datasets-sentinel-1-sentinel-2-srtm-esa-gedi-l2a">Section 2: Importing Datasets (Sentinel-1, Sentinel-2, SRTM, ESA, GEDI L2A)</a></li>
+  <li><a href="#section-3-preparing-data" id="toc-section-3-preparing-data" class="nav-link" data-scroll-target="#section-3-preparing-data">Section 3: Preparing Data</a></li>
+  <li><a href="#section-4-data-processing-and-visualization" id="toc-section-4-data-processing-and-visualization" class="nav-link" data-scroll-target="#section-4-data-processing-and-visualization">Section 4: Data Processing and Visualization</a></li>
+  <li><a href="#section-5-data-fusion-and-model-training" id="toc-section-5-data-fusion-and-model-training" class="nav-link" data-scroll-target="#section-5-data-fusion-and-model-training">Section 5: Data Fusion and Model Training</a></li>
+  <li><a href="#section-6-model-evaluation-and-export" id="toc-section-6-model-evaluation-and-export" class="nav-link" data-scroll-target="#section-6-model-evaluation-and-export">Section 6: Model Evaluation and Export</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#canopy-height-prediction-results" id="toc-canopy-height-prediction-results" class="nav-link" data-scroll-target="#canopy-height-prediction-results">Canopy Height Prediction Results</a></li>
+  <li><a href="#model-assessment-metrics" id="toc-model-assessment-metrics" class="nav-link" data-scroll-target="#model-assessment-metrics">Model Assessment Metrics</a></li>
+  </ul></li>
+  <li><a href="#carbon-stock-estimation" id="toc-carbon-stock-estimation" class="nav-link" data-scroll-target="#carbon-stock-estimation">Carbon Stock Estimation</a>
+  <ul class="collapse">
+  <li><a href="#aboveground-biomass-density-abgd-calculation-results" id="toc-aboveground-biomass-density-abgd-calculation-results" class="nav-link" data-scroll-target="#aboveground-biomass-density-abgd-calculation-results">Aboveground Biomass Density (ABGD) Calculation Results</a></li>
+  <li><a href="#tree-area-calculation" id="toc-tree-area-calculation" class="nav-link" data-scroll-target="#tree-area-calculation">Tree Area Calculation</a></li>
+  <li><a href="#carbon-storage-calculation" id="toc-carbon-storage-calculation" class="nav-link" data-scroll-target="#carbon-storage-calculation">Carbon Storage Calculation</a></li>
+  </ul></li>
+  <li><a href="#web-application-showcase" id="toc-web-application-showcase" class="nav-link" data-scroll-target="#web-application-showcase">Web Application Showcase</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">Key Findings</a></li>
+  <li><a href="#significance" id="toc-significance" class="nav-link" data-scroll-target="#significance">Significance</a></li>
+  <li><a href="#future-directions" id="toc-future-directions" class="nav-link" data-scroll-target="#future-directions">Future Directions</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Canopy Height and Carbon Stock Prediction Using Satellite Images with Machine Learning on GEE</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">canopy height</div>
+    <div class="quarto-category">carbon stock</div>
+    <div class="quarto-category">javascript</div>
+    <div class="quarto-category">machine learning</div>
+    <div class="quarto-category">remote sensing</div>
+    <div class="quarto-category">google earth engine</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Huang Han Wang </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 5, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p><img src="Title.jpeg" class="img-fluid"></p>
+<p>This research motivation comes from an awe of the beauty of nature. To dive into how unique nature is and my research motivation, click here <a href="https://wanghuanghan.github.io/blog/research%20project%20story/research-story.html">Fascinating Malaysia Biodiversity - Research Motivation</a>.</p>
+<section id="description" class="level2">
+<h2 class="anchored" data-anchor-id="description">Description</h2>
+<p>This project uses satellite imagery on <a href="https://earthengine.google.com/">Google Earth Engine</a> (GEE) to predict canopy height and estimate carbon content in the University of Malaya (Kuala Lumpur, Malaysia) area.</p>
+</section>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>To give a brief overview of this research’s scope, I’ve created an infographic to showcase this project’s objectives, impacts, results, and demos.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="infographic.jpeg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Infographic for the Research</figcaption>
+</figure>
+</div>
+</section>
+<section id="setup-and-installation" class="level2">
+<h2 class="anchored" data-anchor-id="setup-and-installation">Setup and Installation</h2>
+<ul>
+<li><strong>Prerequisites:</strong> Obtain access to <a href="https://code.earthengine.google.com/">Google Earth Engine Code Editor</a> and have a GEE account. If not, please register <a href="https://code.earthengine.google.com/register">here</a>.</li>
+<li><strong>Installation:</strong> No installation required; access GEE platform and import necessary scripts.</li>
+</ul>
+</section>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<ul>
+<li>Example snippets to execute canopy height prediction and carbon estimation using GEE’s JavaScript.</li>
+<li>Instructions on how to run the scripts within the GEE platform.</li>
+</ul>
+</section>
+<section id="data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources">Data Sources</h2>
+<ul>
+<li><p><a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD">Sentinel-1 (C-band synthetic aperture radar SAR)</a>:</p>
+<p>Sentinel-1 is a space mission by the European Union (EU) and carried out by ESA under the Copernicus Program.</p>
+<ul>
+<li>VV and VH bands capture signals reflected from the Earth’s surface, including vegetation and terrain.</li>
+<li>Use VV and VH as predictor variables. These bands offer radar backscatter values that can be related to vegetation structure, including canopy height, as validation with GEDI Data.</li>
+</ul></li>
+<li><p><a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR">Sentinel-2</a>:</p>
+<p>Sentinel-2 is a European multi-spectral imaging mission with high resolution.</p>
+<ul>
+<li>Included 12 spectral bands with resolutions of 10m, 20m, and 60m.</li>
+<li>Primary objective: monitoring variability in land surface conditions.</li>
+<li>Select bands ‘B2’, ‘B3’, ‘B4’, ‘B5’, ‘B6’, ‘B7’, ‘B8’, ‘B11’, ‘B12’ as predictor variables. → Manual feature selection</li>
+<li>Take all the 12 bands from ’B1’ to ‘B12’ as independent variables. → Automatic feature selection</li>
+</ul></li>
+<li><p><a href="https://developers.google.com/earth-engine/datasets/catalog/USGS_SRTMGL1_003">NASA SRTM Digital Elevation 30m</a>:</p>
+<p>SRTM data is used to construct a global digital elevation model.</p>
+<ul>
+<li>SRTM was conducted aboard the space shuttle Endeavour from February 11-22, 2000.</li>
+<li>Extract ”Slope” and “Elevation” as predictor variables.</li>
+</ul></li>
+<li><p><a href="https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v100">European Space Agency (ESA) WorldCover 10m</a>:</p>
+<p>The ESA dataset was launched since there is a massive need for accurate, timely, and high-resolution information on land cover, land use, and earth surface change.</p>
+<ul>
+<li>Use value 10 (Tree Cover only) as a predictor variable.</li>
+</ul></li>
+<li><p><a href="https://developers.google.com/earth-engine/datasets/catalog/LARSE_GEDI_GEDI02_A_002_MONTHLY">GEDI L2A Raster Canopy Top Height</a>:</p>
+<p>GEDI Light Detection and Ranging (Lidar) is an active remote sensing technology that uses a laser pulse to measure distance.</p>
+<ul>
+<li>Primarily used for measuring tree height, aboveground biomass, as well as leaf area index.</li>
+<li>Using ‘rh98’ (relative height metrics at 98%) to be the sampling point.</li>
+</ul></li>
+<li><p><a href="https://developers.google.com/earth-engine/datasets/catalog/LARSE_GEDI_GEDI04_B_002">GEDI L4B Gridded Aboveground Biomass Density</a>:</p>
+<p>This dataset encompasses gridded information on aboveground biomass density derived from GEDI observations. These data provide insights into vegetation growth and distribution, offering valuable information for understanding global vegetation health and the impacts of climate change.</p>
+<ul>
+<li>Using ‘MU’ (mean aboveground biomass density, which estimated mean AGBD for the 1 km grid cell, including forest and non-forest.) to be the sampling point.</li>
+</ul></li>
+</ul>
+</section>
+<section id="project-model-structure" class="level2">
+<h2 class="anchored" data-anchor-id="project-model-structure">Project Model Structure</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="model_structure.jpeg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Research Model Structure</figcaption>
+</figure>
+</div>
+<p>This model represents an example of a canopy height prediction workflow. For the AGBD prediction modeling and PCA (Principal Component Analysis), I’ve organized them into separate folders on my <a href="https://github.com/WangHuangHan">GitHub</a> for easy reference.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="study_area.jpeg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Research Study Area (University of Malaya) from Sentinel-2 imageries</figcaption>
+</figure>
+</div>
+<p>The research project focuses on the University of Malaya as its study area, leveraging the Sentinel-2 dataset spanning from April 1st, 2021, to June 30th, 2021. Situated at the border of Kuala Lumpur and Petaling Jaya (Selangor), the university campus is nestled within a forested landscape. Notably, within this campus lies Rimba Ilmu (The Forest of Knowledge), a reserved forest established in 1974, covering approximately 80 hectares and hosting remarkable collections. Rimba Ilmu serves a pivotal role, utilizing its extensive resources to educate the public and students about tropical plant life, ecology, and conservation, thus fostering awareness about these critical aspects.</p>
+</section>
+<section id="minimal-reproducible-example-javascript-code" class="level2">
+<h2 class="anchored" data-anchor-id="minimal-reproducible-example-javascript-code">Minimal Reproducible Example (JavaScript Code)</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Important Note:</strong> This example code illustrates the process of conducting canopy height regression modeling utilizing the Random Forest model along with manual feature selection.</p>
+</div>
+</div>
+<section id="section-1-boundary-selection" class="level3">
+<h3 class="anchored" data-anchor-id="section-1-boundary-selection">Section 1: Boundary Selection</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Choose boundary on GEE</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> boundary <span class="op">=</span> ee<span class="op">.</span><span class="at">Geometry</span><span class="op">.</span><span class="fu">Polygon</span>(<span class="co">/* Coordinates */</span>)<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a polygon feature</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> polygon <span class="op">=</span> ee<span class="op">.</span><span class="fu">Feature</span>(ee<span class="op">.</span><span class="at">Geometry</span><span class="op">.</span><span class="fu">Polygon</span>(boundary<span class="op">.</span><span class="fu">coordinates</span>()))<span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a feature collection from the polygon</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> boundary_feature <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>([polygon])<span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the feature collection</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Boundary:'</span><span class="op">,</span> boundary_feature)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="section-2-importing-datasets-sentinel-1-sentinel-2-srtm-esa-gedi-l2a" class="level3">
+<h3 class="anchored" data-anchor-id="section-2-importing-datasets-sentinel-1-sentinel-2-srtm-esa-gedi-l2a">Section 2: Importing Datasets (Sentinel-1, Sentinel-2, SRTM, ESA, GEDI L2A)</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Load Sentinel-1 for the non-rainy season.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> S1_PRS <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'COPERNICUS/S1_GRD'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filterDate</span>(<span class="st">'2021-04-01'</span><span class="op">,</span> <span class="st">'2021-06-30'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">listContains</span>(<span class="st">'transmitterReceiverPolarisation'</span><span class="op">,</span> <span class="st">'VV'</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">listContains</span>(<span class="st">'transmitterReceiverPolarisation'</span><span class="op">,</span> <span class="st">'VH'</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'instrumentMode'</span><span class="op">,</span> <span class="st">'IW'</span>))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'orbitProperties_pass'</span><span class="op">,</span> <span class="st">'ASCENDING'</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">bounds</span>(boundary))<span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Load Sentinel-2 spectral reflectance data.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> s2 <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'COPERNICUS/S2_SR'</span>)<span class="op">;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Load SRTM</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> SRTM <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="st">"USGS/SRTMGL1_003"</span>)<span class="op">;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">// Clip Elevation</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> elevation <span class="op">=</span> SRTM<span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">// Load ESA World cover data</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> dataset <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">"ESA/WorldCover/v100"</span>)<span class="op">.</span><span class="fu">first</span>()<span class="op">;</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">// Clip the land cover to the boundary</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> ESA_LC_2020 <span class="op">=</span> dataset<span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">;</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">// Extract forest areas from the land cover value = 10</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> forest_mask <span class="op">=</span> ESA_LC_2020<span class="op">.</span><span class="fu">updateMask</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  ESA_LC_2020<span class="op">.</span><span class="fu">eq</span>(<span class="dv">10</span>) <span class="co">// Only keep pixels where class equals 2</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">// Clip land cover to the boundary and visualize forests</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">// Display forests only from ESA imagery.</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> visualization <span class="op">=</span> {<span class="dt">bands</span><span class="op">:</span> [<span class="st">'Map'</span>]<span class="op">,</span>}<span class="op">;</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(forest_mask<span class="op">,</span> visualization<span class="op">,</span> <span class="st">"Trees"</span>)<span class="op">;</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">// Import the "GEDI02_A_002_MONTHLY" dataset</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> dataset <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'LARSE/GEDI/GEDI02_A_002_MONTHLY'</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">map</span>(qualityMask)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">select</span>(<span class="st">'rh98'</span>)<span class="op">.</span><span class="fu">filterBounds</span>(boundary)<span class="op">;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>                  </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a palette to visaulize the dataset</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> gediVis <span class="op">=</span> {</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="dt">min</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="dt">max</span><span class="op">:</span> <span class="dv">60</span><span class="op">,</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="dt">palette</span><span class="op">:</span> <span class="st">'darkred, red, orange, green, darkgreen'</span><span class="op">,</span> </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co">// Set the map center and visualize the dataset</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">setCenter</span>(<span class="fl">101.6556468417507</span><span class="op">,</span> <span class="fl">3.127386383953448</span><span class="op">,</span> <span class="dv">13</span>)<span class="op">;</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(dataset<span class="op">,</span> gediVis<span class="op">,</span> <span class="st">'rh98'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="section-3-preparing-data" class="level3">
+<h3 class="anchored" data-anchor-id="section-3-preparing-data">Section 3: Preparing Data</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Prepare inter-quartile range (IQR)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> S1_PRS_pc <span class="op">=</span> S1_PRS<span class="op">.</span><span class="fu">reduce</span>(ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">percentile</span>([<span class="dv">25</span><span class="op">,</span><span class="dv">50</span><span class="op">,</span><span class="dv">75</span>]))<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Convert to natural units (linear units, which can be averaged)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> S1_PRS_pc <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="dv">10</span>)<span class="op">.</span><span class="fu">pow</span>(S1_PRS_pc<span class="op">.</span><span class="fu">divide</span>(<span class="dv">10</span>))<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> S1_PRS_pc_Feats <span class="op">=</span> S1_PRS_pc<span class="op">.</span><span class="fu">select</span>([<span class="st">'VH_p50'</span><span class="op">,</span> <span class="st">'VV_p50'</span>])<span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Reproject to MY zone</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> S1_PRS_pc_Feats <span class="op">=</span> S1_PRS_pc_Feats<span class="op">.</span><span class="fu">reproject</span>({<span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span><span class="dv">30</span>})<span class="op">;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Check projection information</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Projection, crs, and crs_transform:'</span><span class="op">,</span> S1_PRS_pc_Feats<span class="op">.</span><span class="fu">projection</span>())<span class="op">;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">// Also, Sentinel-2 and SRTM images have to be reprojected.</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">//Reproject to MY zone</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> S2_composite <span class="op">=</span> composite<span class="op">.</span><span class="fu">median</span>()<span class="op">.</span><span class="fu">reproject</span>({<span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span><span class="dv">30</span>})<span class="op">;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">// Check projection information</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'S2_Projection, crs, and crs_transform:'</span><span class="op">,</span> S2_composite<span class="op">.</span><span class="fu">projection</span>())<span class="op">;</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">// Reproject 'elevation' to MY zone</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> elevation <span class="op">=</span> elevation<span class="op">.</span><span class="fu">reproject</span>({<span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span><span class="dv">30</span>})<span class="op">;</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">// Check projection information</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'elevation_Projection, crs, and crs_transform:'</span><span class="op">,</span> elevation<span class="op">.</span><span class="fu">projection</span>())<span class="op">;</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Derive slope from SRTM</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> slope <span class="op">=</span> ee<span class="op">.</span><span class="at">Terrain</span><span class="op">.</span><span class="fu">slope</span>(SRTM)<span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">;</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">// Reproject 'slope' to MY zone</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> slope <span class="op">=</span> slope<span class="op">.</span><span class="fu">reproject</span>({<span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span> <span class="dt">scale</span><span class="op">:</span><span class="dv">30</span>})<span class="op">;</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">// Check projection information</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'slope_Projection, crs, and crs_transform:'</span><span class="op">,</span> slope<span class="op">.</span><span class="fu">projection</span>())<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="section-4-data-processing-and-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="section-4-data-processing-and-visualization">Section 4: Data Processing and Visualization</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Calculate IQR for the VV and VH polarizations</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Calculate IQR for the VV polarization</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> PRS_VV_iqr <span class="op">=</span> S1_PRS_pc_Feats</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>((S1_PRS_pc<span class="op">.</span><span class="fu">select</span>(<span class="st">'VV_p75'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">subtract</span>(S1_PRS_pc<span class="op">.</span><span class="fu">select</span>(<span class="st">'VV_p25'</span>)))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">rename</span>(<span class="st">'VV_iqr'</span>))<span class="op">;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Calculate IQR for the VH polarization</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> PRS_VH_iqr <span class="op">=</span> S1_PRS_pc_Feats</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>((S1_PRS_pc<span class="op">.</span><span class="fu">select</span>(<span class="st">'VH_p75'</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">subtract</span>(S1_PRS_pc<span class="op">.</span><span class="fu">select</span>(<span class="st">'VH_p25'</span>)))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">rename</span>(<span class="st">'VH_iqr'</span>))<span class="op">;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the image to the console</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Post-rainy Season VV IQR'</span><span class="op">,</span> PRS_VV_iqr)<span class="op">;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the image to the console</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Post-rainy Season VH IQR'</span><span class="op">,</span> PRS_VH_iqr)<span class="op">;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Display S1 IQR imagery</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(PRS_VV_iqr<span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">,</span> {<span class="st">'bands'</span><span class="op">:</span> <span class="st">'VV_iqr'</span><span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="fl">0.1</span>}<span class="op">,</span> <span class="st">'Sentinel1 IW VV'</span>)<span class="op">;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(PRS_VH_iqr<span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">,</span> {<span class="st">'bands'</span><span class="op">:</span> <span class="st">'VH_iqr'</span><span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="fl">0.1</span>}<span class="op">,</span> <span class="st">'Sentinel1 IW VH'</span>)<span class="op">;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">// Create masks, filter clouds from Sentinel-2, and prepare composite imagery</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a function to mask clouds using the Sentinel-2 QA band.</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">maskS2clouds</span>(image) {</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> qa <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>(<span class="st">'QA60'</span>)<span class="op">;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="co">//Bits 10 and 11 are clouds and cirrus, respectively.</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> cloudBitMask <span class="op">=</span> ee<span class="op">.</span><span class="fu">Number</span>(<span class="dv">2</span>)<span class="op">.</span><span class="fu">pow</span>(<span class="dv">10</span>)<span class="op">.</span><span class="fu">int</span>()<span class="op">;</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> cirrusBitMask <span class="op">=</span> ee<span class="op">.</span><span class="fu">Number</span>(<span class="dv">2</span>)<span class="op">.</span><span class="fu">pow</span>(<span class="dv">11</span>)<span class="op">.</span><span class="fu">int</span>()<span class="op">;</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">//Both flags should be set to zero, indicating clear conditions.</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> mask <span class="op">=</span> qa<span class="op">.</span><span class="fu">bitwiseAnd</span>(cloudBitMask)<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">.</span><span class="fu">and</span>(</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>             qa<span class="op">.</span><span class="fu">bitwiseAnd</span>(cirrusBitMask)<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>))<span class="op">;</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">//Return the masked and scaled data.</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> image<span class="op">.</span><span class="fu">updateMask</span>(mask)<span class="op">.</span><span class="fu">divide</span>(<span class="dv">10000</span>)<span class="op">;</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">// Filter clouds from Sentinel-2 for a given period.</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> composite <span class="op">=</span> s2<span class="op">.</span><span class="fu">filterDate</span>(<span class="st">'2021-04-01'</span><span class="op">,</span> <span class="st">'2021-06-30'</span>)</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>                  <span class="co">// Pre-filter to get less cloudy granules.</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">lt</span>(<span class="st">'CLOUDY_PIXEL_PERCENTAGE'</span><span class="op">,</span> <span class="dv">20</span>))</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">map</span>(maskS2clouds)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">select</span>(<span class="st">'B2'</span><span class="op">,</span> <span class="st">'B3'</span><span class="op">,</span> <span class="st">'B4'</span><span class="op">,</span> <span class="st">'B5'</span><span class="op">,</span> <span class="st">'B6'</span><span class="op">,</span> <span class="st">'B7'</span><span class="op">,</span> <span class="st">'B8'</span><span class="op">,</span> <span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>)<span class="op">;</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co">// Display a composite S2 imagery</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(S2_composite<span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">,</span> {<span class="dt">bands</span><span class="op">:</span> [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B8'</span><span class="op">,</span> <span class="st">'B3'</span>]<span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="fl">0.3</span>}<span class="op">,</span> <span class="st">'S2_composite'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="section-5-data-fusion-and-model-training" class="level3">
+<h3 class="anchored" data-anchor-id="section-5-data-fusion-and-model-training">Section 5: Data Fusion and Model Training</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Merge predictor variables</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> mergedCollection <span class="op">=</span> S2_composite</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>(PRS_VV_iqr)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>(PRS_VH_iqr)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>(elevation)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>(slope)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>(forest_mask)<span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Clip to the output image to Uni Malaya study area boundary.</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> clippedmergedCollection <span class="op">=</span> mergedCollection<span class="op">.</span><span class="fu">clipToCollection</span>(boundary_feature)<span class="op">;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'clippedmergedCollection: '</span><span class="op">,</span> clippedmergedCollection)<span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Bands to include in the classification</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> bands <span class="op">=</span> [<span class="st">'B2'</span><span class="op">,</span> <span class="st">'B3'</span><span class="op">,</span> <span class="st">'B4'</span><span class="op">,</span> <span class="st">'B5'</span><span class="op">,</span> <span class="st">'B6'</span><span class="op">,</span> <span class="st">'B7'</span><span class="op">,</span> <span class="st">'B8'</span><span class="op">,</span> <span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span><span class="op">,</span> <span class="st">'VV_iqr'</span><span class="op">,</span> <span class="st">'VH_iqr'</span><span class="op">,</span> <span class="st">'elevation'</span><span class="op">,</span> <span class="st">'slope'</span><span class="op">,</span> <span class="st">'Map'</span>]<span class="op">;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">// Prepare training dataset from GEDI</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">// GEDI's Level 2A Geolocated Elevation and Height Metrics Product (GEDI02_A) is primarily composed of</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">// 100 Relative Height (RH) metrics, which collectively describe the waveform collected by GEDI.</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">// The original GEDI02_A product is a table of point with a spatial resolution (average footprint) of 25 meters.</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Sample 10,000 points from the dataset (Depending on the area in which GEDI received the points more or less)</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> points <span class="op">=</span> mosaic<span class="op">.</span><span class="fu">sample</span>({</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>   <span class="dt">region</span><span class="op">:</span> boundary<span class="op">,</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>   <span class="dt">scale</span><span class="op">:</span> scale<span class="op">,</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>   <span class="dt">numPixels</span><span class="op">:</span> <span class="dv">10000</span><span class="op">,</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>   <span class="dt">projection</span><span class="op">:</span> projection<span class="op">,</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>   <span class="dt">seed</span><span class="op">:</span><span class="dv">66</span><span class="op">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>   <span class="dt">geometries</span><span class="op">:</span> <span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">// Check the number of the training points</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Size: '</span><span class="op">,</span> points<span class="op">.</span><span class="fu">size</span>())<span class="op">;</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(points<span class="op">.</span><span class="fu">limit</span>(<span class="dv">10</span>))<span class="op">;</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">// Display the training points</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(points<span class="op">,</span> {}<span class="op">,</span> <span class="st">'Sampling points'</span>)<span class="op">;</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">// Add a random column (named random) and specify seed value for repeatability.</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> datawithColumn <span class="op">=</span> points<span class="op">.</span><span class="fu">randomColumn</span>(<span class="st">'random'</span><span class="op">,</span> <span class="dv">27</span>)<span class="op">;</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co">// Seperate 70% for training, 30% for validation</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> split <span class="op">=</span> <span class="fl">0.7</span><span class="op">;</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> trainingData <span class="op">=</span> datawithColumn<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">lt</span>(<span class="st">'random'</span><span class="op">,</span> split))<span class="op">;</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the training data</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'training data'</span><span class="op">,</span> trainingData)<span class="op">;</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> validationData <span class="op">=</span> datawithColumn<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">gte</span>(<span class="st">'random'</span><span class="op">,</span> split))<span class="op">;</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the testing (validation) data</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'validation data'</span><span class="op">,</span> validationData)<span class="op">;</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co">// Train a random forest regression model</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="co">// Collect training data</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> training <span class="op">=</span> clippedmergedCollection<span class="op">.</span><span class="fu">select</span>(bands)<span class="op">.</span><span class="fu">sampleRegions</span>({</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  <span class="dt">collection</span><span class="op">:</span> trainingData<span class="op">,</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>  <span class="dt">properties</span><span class="op">:</span> [<span class="st">'rh98'</span>]<span class="op">,</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>  <span class="dt">scale</span><span class="op">:</span> <span class="dv">30</span> <span class="co">// Need to change the scale of training data to avoid the 'out of memory' problem</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="co">// Train a random forest classifier for regression</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> classifier <span class="op">=</span> ee<span class="op">.</span><span class="at">Classifier</span><span class="op">.</span><span class="fu">smileRandomForest</span>({<span class="dt">numberOfTrees</span><span class="op">:</span><span class="dv">50</span><span class="op">,</span> <span class="dt">seed</span><span class="op">:</span><span class="dv">3</span>})    <span class="co">// 50 trees</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">setOutputMode</span>(<span class="st">'REGRESSION'</span>)</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">train</span>({</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>    <span class="dt">features</span><span class="op">:</span> training<span class="op">,</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>    <span class="dt">classProperty</span><span class="op">:</span> <span class="st">'rh98'</span><span class="op">,</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    <span class="dt">inputProperties</span><span class="op">:</span> bands</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="co">// Run the classification and clip it to the boundary</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> regression <span class="op">=</span> clippedmergedCollection<span class="op">.</span><span class="fu">select</span>(bands)</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">classify</span>(classifier<span class="op">,</span> <span class="st">'predicted'</span>)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">clip</span>(boundary)<span class="op">;</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"regression: "</span><span class="op">,</span> regression)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="section-6-model-evaluation-and-export" class="level3">
+<h3 class="anchored" data-anchor-id="section-6-model-evaluation-and-export">Section 6: Model Evaluation and Export</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Visualize regression output and define a palette</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palette <span class="op">=</span> [<span class="st">'#f7fcb9'</span><span class="op">,</span><span class="st">'#addd8e'</span><span class="op">,</span><span class="st">'#31a354'</span>]<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Display the regression output.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Get dictionaries of min &amp; max predicted value</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> regressionMin <span class="op">=</span> (regression<span class="op">.</span><span class="fu">reduceRegion</span>({</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>   <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">min</span>()<span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>   <span class="dt">scale</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>   <span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>   <span class="dt">geometry</span><span class="op">:</span> boundary<span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>   <span class="dt">bestEffort</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>   <span class="dt">tileScale</span><span class="op">:</span> <span class="dv">5</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> regressionMax <span class="op">=</span> (regression<span class="op">.</span><span class="fu">reduceRegion</span>({</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>   <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">max</span>()<span class="op">,</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>   <span class="dt">scale</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>   <span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>   <span class="dt">geometry</span><span class="op">:</span> boundary<span class="op">,</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>   <span class="dt">bestEffort</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>   <span class="dt">tileScale</span><span class="op">:</span> <span class="dv">5</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> regressionAvg <span class="op">=</span> (regression<span class="op">.</span><span class="fu">reduceRegion</span>({</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>   <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">mean</span>()<span class="op">,</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>   <span class="dt">scale</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>   <span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>   <span class="dt">geometry</span><span class="op">:</span> boundary<span class="op">,</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>   <span class="dt">bestEffort</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>   <span class="dt">tileScale</span><span class="op">:</span> <span class="dv">5</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span>  </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">// Add to map</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> viz <span class="op">=</span> {<span class="dt">palette</span><span class="op">:</span> palette<span class="op">,</span> <span class="dt">min</span><span class="op">:</span>regressionMin<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'predicted'</span>)<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">,</span> <span class="dt">max</span><span class="op">:</span>regressionMax<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'predicted'</span>)<span class="op">.</span><span class="fu">getInfo</span>()}<span class="op">;</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(regression<span class="op">,</span> viz<span class="op">,</span> <span class="st">'Regression'</span>)<span class="op">;</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="co">// Check model performance</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Regression Min &amp; Max: "</span><span class="op">,</span> regressionMin<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'predicted'</span>)<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">,</span> regressionMax<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'predicted'</span>)<span class="op">.</span><span class="fu">getInfo</span>())<span class="op">;</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Regression Average: "</span><span class="op">,</span> regressionAvg<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'predicted'</span>)<span class="op">.</span><span class="fu">getInfo</span>())<span class="op">;</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co">// Create model assessment statistics</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="co">// Get predicted regression points in same location as training data</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> predictedTraining <span class="op">=</span> regression<span class="op">.</span><span class="fu">sampleRegions</span>({<span class="dt">collection</span><span class="op">:</span> trainingData<span class="op">,</span> <span class="dt">geometries</span><span class="op">:</span> <span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="co">// Seperate the observed (rh98_GEDI) &amp; predicted (regression) properties</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> sampleTraining <span class="op">=</span> predictedTraining<span class="op">.</span><span class="fu">select</span>([<span class="st">'rh98'</span><span class="op">,</span> <span class="st">'predicted'</span>])<span class="op">;</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="co">// Compute Root Mean Squared Error (RMSE)</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co">// Get array of observation and prediction values</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> observationTraining <span class="op">=</span> ee<span class="op">.</span><span class="fu">Array</span>(sampleTraining<span class="op">.</span><span class="fu">aggregate_array</span>(<span class="st">'rh98'</span>))<span class="op">;</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> predictionTraining <span class="op">=</span> ee<span class="op">.</span><span class="fu">Array</span>(sampleTraining<span class="op">.</span><span class="fu">aggregate_array</span>(<span class="st">'predicted'</span>))<span class="op">;</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="co">// Compute residuals</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> residualsTraining <span class="op">=</span> observationTraining<span class="op">.</span><span class="fu">subtract</span>(predictionTraining)<span class="op">;</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="co">// Compute RMSE (Training) with equation and print the result</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> rmseTraining <span class="op">=</span> residualsTraining<span class="op">.</span><span class="fu">pow</span>(<span class="dv">2</span>)<span class="op">.</span><span class="fu">reduce</span>(<span class="st">'mean'</span><span class="op">,</span> [<span class="dv">0</span>])<span class="op">.</span><span class="fu">sqrt</span>()<span class="op">;</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Training RMSE'</span><span class="op">,</span> rmseTraining)<span class="op">;</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="co">//Perform validation</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="co">// Get predicted regression points in same location as validation data</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> predictedValidation <span class="op">=</span> regression<span class="op">.</span><span class="fu">sampleRegions</span>({<span class="dt">collection</span><span class="op">:</span> validationData<span class="op">,</span> <span class="dt">geometries</span><span class="op">:</span> <span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a><span class="co">// Seperate the observed (rh98_GEDI) &amp; predicted (regression) properties</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> sampleValidation <span class="op">=</span> predictedValidation<span class="op">.</span><span class="fu">select</span>([<span class="st">'rh98'</span><span class="op">,</span> <span class="st">'predicted'</span>])<span class="op">;</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="co">// Compute RMSE (Validation)</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a><span class="co">// Get array of observation and prediction values</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> observationValidation <span class="op">=</span> ee<span class="op">.</span><span class="fu">Array</span>(sampleValidation<span class="op">.</span><span class="fu">aggregate_array</span>(<span class="st">'rh98'</span>))<span class="op">;</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> predictionValidation <span class="op">=</span> ee<span class="op">.</span><span class="fu">Array</span>(sampleValidation<span class="op">.</span><span class="fu">aggregate_array</span>(<span class="st">'predicted'</span>))<span class="op">;</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a><span class="co">// Compute residuals</span></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> residualsValidation <span class="op">=</span> observationValidation<span class="op">.</span><span class="fu">subtract</span>(predictionValidation)<span class="op">;</span></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="co">// Compute RMSE with equation and print the result</span></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> rmseValidation <span class="op">=</span> residualsValidation<span class="op">.</span><span class="fu">pow</span>(<span class="dv">2</span>)<span class="op">.</span><span class="fu">reduce</span>(<span class="st">'mean'</span><span class="op">,</span> [<span class="dv">0</span>])<span class="op">.</span><span class="fu">sqrt</span>()<span class="op">;</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Validation RMSE'</span><span class="op">,</span> rmseValidation)<span class="op">;</span></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a><span class="co">// Export the regression output</span></span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>Export<span class="op">.</span><span class="at">image</span><span class="op">.</span><span class="fu">toDrive</span>({</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>  <span class="dt">image</span><span class="op">:</span>regression<span class="op">,</span></span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>  <span class="dt">description</span><span class="op">:</span> <span class="st">'UM_TCH_GEDI_2021'</span><span class="op">,</span>  <span class="co">//Please change your description here.</span></span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>  <span class="dt">scale</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span></span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>  <span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:32647'</span><span class="op">,</span></span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>  <span class="dt">maxPixels</span><span class="op">:</span> <span class="dv">6756353855</span><span class="op">,</span></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>  <span class="dt">region</span><span class="op">:</span> boundary</span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<section id="canopy-height-prediction-results" class="level3">
+<h3 class="anchored" data-anchor-id="canopy-height-prediction-results">Canopy Height Prediction Results</h3>
+<p><strong>Table 1</strong> showcases the outcomes of various machine learning models in predicting canopy height based on the satellite imagery and geographical data utilized in this project:</p>
+<table class="table">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 29%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>No</th>
+<th>Machine Learning Model</th>
+<th>Min. Canopy Height (m)</th>
+<th>Avg. Canopy Height (m)</th>
+<th>Max. Canopy Height (m)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Random Forest (RF)</td>
+<td>7.435</td>
+<td>13.69</td>
+<td>20.847</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>RF with PCA</td>
+<td>5.81</td>
+<td>11.714</td>
+<td>23.469</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Gradient Boost Tree Regression</td>
+<td>1.466</td>
+<td>9.182</td>
+<td>22.049</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>GBTR with PCA</td>
+<td>4.457</td>
+<td>10.437</td>
+<td>20.889</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Support Vector Machine (SVM)</td>
+<td>11.087</td>
+<td>12.368</td>
+<td>14.058</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>SVM with PCA</td>
+<td>7.809</td>
+<td>9.318</td>
+<td>12.036</td>
+</tr>
+</tbody>
+</table>
+<p>These results demonstrate the variation in minimum, average, and maximum canopy heights predicted by different machine learning models, highlighting each model’s potential to effectively estimate canopy height.</p>
+</section>
+<section id="model-assessment-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="model-assessment-metrics">Model Assessment Metrics</h3>
+<p><strong>Table 2</strong> represents the assessment metrics of the machine learning models used for canopy height prediction:</p>
+<table class="table">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 29%">
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 17%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>No</th>
+<th>Machine Learning Model</th>
+<th>R² Training (70%)</th>
+<th>R² Testing (30%)</th>
+<th>RMSE (m) Training</th>
+<th>RMSE (m) Testing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Random Forest (RF)</td>
+<td>0.655</td>
+<td>0.355</td>
+<td>7.954</td>
+<td>5.523</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>RF with PCA</td>
+<td>0.731</td>
+<td>0.721</td>
+<td>6.814</td>
+<td>4.05</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Gradient Boost Tree Regression</td>
+<td>0.389</td>
+<td>0.377</td>
+<td>8.654</td>
+<td>6.686</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>GBTR with PCA</td>
+<td>0.577</td>
+<td>0.685</td>
+<td>7.716</td>
+<td>4.196</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Support Vector Machine (SVM)</td>
+<td>0.604</td>
+<td>0.193</td>
+<td>9.905</td>
+<td>7.764</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>SVM with PCA</td>
+<td>0.169</td>
+<td>0.48</td>
+<td>11.085</td>
+<td>8.511</td>
+</tr>
+</tbody>
+</table>
+<p>These metrics gauge the performance of each model in predicting canopy height, providing insights into their training and testing R² values along with the Root Mean Squared Error (RMSE). A higher R² value closer to 1 and lower RMSE values indicate better predictive accuracy.</p>
+<p>Describe these tables to highlight the significance of each model’s performance metrics in predicting canopy height and assessing the model’s accuracy using R² and RMSE values.</p>
+</section>
+</section>
+<section id="carbon-stock-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="carbon-stock-estimation">Carbon Stock Estimation</h2>
+<section id="aboveground-biomass-density-abgd-calculation-results" class="level3">
+<h3 class="anchored" data-anchor-id="aboveground-biomass-density-abgd-calculation-results">Aboveground Biomass Density (ABGD) Calculation Results</h3>
+<p>Using the GEDI L4B dataset and employing the Random Forest modeling method, the aboveground biomass prediction results in the University of Malaya are as follows:</p>
+<section id="table-3-aboveground-biomass-prediction-results" class="level4">
+<h4 class="anchored" data-anchor-id="table-3-aboveground-biomass-prediction-results">Table 3 Aboveground Biomass Prediction Results</h4>
+<table class="table">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 27%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>No</th>
+<th>Machine Learning Model</th>
+<th>Min. AGBD (Mg/ha)</th>
+<th>Avg. AGBD (Mg/ha)</th>
+<th>Max. AGBD (Mg/ha)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Random Forest (RF)</td>
+<td>21.406</td>
+<td>41.252</td>
+<td>68.559</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="table-4-model-assessment-metrics" class="level4">
+<h4 class="anchored" data-anchor-id="table-4-model-assessment-metrics">Table 4 Model Assessment Metrics</h4>
+<table class="table">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 21%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 21%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>No</th>
+<th>Machine Learning Model</th>
+<th>R² Training (70%)</th>
+<th>R² Testing (30%)</th>
+<th>RMSE (Mg/ha) Training</th>
+<th>RMSE (Mg/ha) Testing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Random Forest (RF)</td>
+<td>0.73</td>
+<td>0.209</td>
+<td>29.637</td>
+<td>27.751</td>
+</tr>
+</tbody>
+</table>
+<p>These metrics showcase the effectiveness of the Random Forest model in predicting aboveground biomass density, indicating its potential to estimate biomass with considerable accuracy.</p>
+</section>
+</section>
+<section id="tree-area-calculation" class="level3">
+<h3 class="anchored" data-anchor-id="tree-area-calculation">Tree Area Calculation</h3>
+<p>The total tree land area within the University of Malaya study area has been calculated:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Tree Land area (hectare, ha) in the Study area (University of Malaya)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Calculate the tree area in hectares</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> treeArea <span class="op">=</span> forest_mask<span class="op">.</span><span class="fu">select</span>(<span class="st">'Map'</span>)<span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> areaImage <span class="op">=</span> treeArea<span class="op">.</span><span class="fu">multiply</span>(ee<span class="op">.</span><span class="at">Image</span><span class="op">.</span><span class="fu">pixelArea</span>())<span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Now that each pixel for the forest class in the image has the value</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">// equal to its area, we can sum up all the values in the region</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">// to get the total forested area.</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> area <span class="op">=</span> areaImage<span class="op">.</span><span class="fu">reduceRegion</span>({</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">sum</span>()<span class="op">,</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">geometry</span><span class="op">:</span> boundary<span class="op">,</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">scale</span><span class="op">:</span> <span class="dv">30</span><span class="op">,</span> <span class="co">// Specify the scale that matches your projection</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">maxPixels</span><span class="op">:</span> <span class="fl">1e9</span> <span class="co">// Adjust as needed</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">// Convert the forested area to hectares</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> treeAreaHectares <span class="op">=</span> ee<span class="op">.</span><span class="fu">Number</span>(area<span class="op">.</span><span class="fu">get</span>(<span class="st">'Map'</span>))<span class="op">.</span><span class="fu">divide</span>(<span class="dv">10000</span>)<span class="op">;</span> <span class="co">// 1 square meter = 0.0001 hectares</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the tree area in hectares</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Tree Area (Hectares) in the University of Malaya:'</span><span class="op">,</span> treeAreaHectares)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Tree Area (Hectares) in the University of Malaya: 2109.434 hectares</strong></p>
+</section>
+<section id="carbon-storage-calculation" class="level3">
+<h3 class="anchored" data-anchor-id="carbon-storage-calculation">Carbon Storage Calculation</h3>
+<p>The carbon storage estimation process involves the computation of aboveground carbon storage based on the calculated aboveground biomass density and the specified tree area in the University of Malaya study area:</p>
+<section id="aboveground-carbon-storage-calculation" class="level4">
+<h4 class="anchored" data-anchor-id="aboveground-carbon-storage-calculation">Aboveground Carbon Storage Calculation</h4>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Aboveground Carbon Storage Calculation in Study Area (UM)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Formula: Aboveground Carbon Storage (Mg, Megagram also known as tonnes) = Aboveground Biomass (Mg/ha) x Carbon Content Factor x Tree Area (ha)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Define the inputs</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> minAbovegroundBiomass <span class="op">=</span> <span class="fl">21.406166582107545</span><span class="op">;</span> <span class="co">// Min aboveground biomass (Mg/ha)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> maxAbovegroundBiomass <span class="op">=</span> <span class="fl">68.5589729944865</span><span class="op">;</span>   <span class="co">// Max aboveground biomass (Mg/ha)</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> avgAbovegroundBiomass <span class="op">=</span> <span class="fl">41.252308736491585</span><span class="op">;</span> <span class="co">// Avg aboveground biomass (Mg/ha)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> carbonContentFactor <span class="op">=</span> <span class="fl">0.5</span><span class="op">;</span>                   <span class="co">// Carbon content factor</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> treeArea <span class="op">=</span> <span class="fl">2109.4340347280445</span><span class="op">;</span>               <span class="co">// Tree area 2109.4340347280445 ha</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Calculate Aboveground Carbon Storage</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> abovegroundCarbonStorageMin <span class="op">=</span> minAbovegroundBiomass <span class="op">*</span> carbonContentFactor <span class="op">*</span> treeArea<span class="op">;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> abovegroundCarbonStorageMax <span class="op">=</span> maxAbovegroundBiomass <span class="op">*</span> carbonContentFactor <span class="op">*</span> treeArea<span class="op">;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> abovegroundCarbonStorageAvg <span class="op">=</span> avgAbovegroundBiomass <span class="op">*</span> carbonContentFactor <span class="op">*</span> treeArea<span class="op">;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the results</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Aboveground Carbon Storage (Mg, tonnes) in the University of Malaya:'</span>)<span class="op">;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Minimum Estimate:'</span><span class="op">,</span> abovegroundCarbonStorageMin<span class="op">,</span> <span class="st">'Mg (tonnes)'</span>)<span class="op">;</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Maximum Estimate:'</span><span class="op">,</span> abovegroundCarbonStorageMax<span class="op">,</span> <span class="st">'Mg (tonnes)'</span>)<span class="op">;</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'Average Estimate:'</span><span class="op">,</span> abovegroundCarbonStorageAvg<span class="op">,</span> <span class="st">'Mg (tonnes)'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Aboveground Carbon Stock Estimation Results</strong></p>
+<p><strong>Table 5</strong> summarizes the estimates for aboveground carbon stock in the University of Malaya study area:</p>
+<table class="table">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 34%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>No</th>
+<th>Aboveground Carbon Stock Area</th>
+<th>Min. Carbon (Mg)</th>
+<th>Avg. Carbon (Mg)</th>
+<th>Max. Carbon (Mg)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>University of Malaya</td>
+<td>22577.448</td>
+<td>43509.512</td>
+<td>72310.316</td>
+</tr>
+</tbody>
+</table>
+<p>These estimates indicate the potential carbon storage within the specified study area, providing valuable insights into its carbon sequestration capacity and highlighting its significance in environmental assessments and management strategies.</p>
+</section>
+</section>
+</section>
+<section id="web-application-showcase" class="level2">
+<h2 class="anchored" data-anchor-id="web-application-showcase">Web Application Showcase</h2>
+<ul>
+<li><a href="https://s2155961.users.earthengine.app/view/canopy-height-prediction-um-random-forest">Canopy Height Prediction Random Forest Model without PCA</a></li>
+<li><a href="https://s2155961.users.earthengine.app/view/canopy-height-prediction-umrf-with-pca">Canopy Height Prediction Random Forest Model with PCA</a></li>
+<li><a href="https://s2155961.users.earthengine.app/view/aboveground-biomass-density-prediction-university-of-malaya">Aboveground Biomass Prediction Random Forest Model</a></li>
+</ul>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This project leveraged satellite imagery and machine learning through Google Earth Engine to estimate canopy height and carbon content in the University of Malaya area. By analyzing diverse datasets like Sentinel-1, Sentinel-2, SRTM, ESA WorldCover, GEDI L2A, and GEDI L4B, we gained valuable insights.</p>
+<section id="key-findings" class="level3">
+<h3 class="anchored" data-anchor-id="key-findings">Key Findings</h3>
+<ul>
+<li><p><strong>Canopy Height Prediction:</strong> Various machine learning models were employed, showcasing the potential to estimate canopy height. Random Forest and RF with Principal Component Analysis emerged as promising models.</p></li>
+<li><p><strong>Aboveground Biomass Density:</strong> The Random Forest model proved valuable in estimating biomass density, providing insights into vegetation health and carbon sequestration potential.</p></li>
+<li><p><strong>Carbon Storage Assessment:</strong> The estimation of aboveground carbon stocks revealed significant reserves within the University of Malaya area, highlighting its role as a crucial carbon sink.</p></li>
+</ul>
+</section>
+<section id="significance" class="level3">
+<h3 class="anchored" data-anchor-id="significance">Significance</h3>
+<p>This study sheds light on the University of Malaya’s ecosystem, emphasizing its importance in carbon sequestration. Understanding its capacity for storing carbon reinforces the significance of preserving such areas for environmental stability and biodiversity conservation.</p>
+</section>
+<section id="future-directions" class="level3">
+<h3 class="anchored" data-anchor-id="future-directions">Future Directions</h3>
+<p>The methodologies employed and findings derived from this research offer implications for environmental assessments and conservation strategies. The accuracy of predictive models and detailed carbon stock estimations could serve as a foundational framework for similar studies globally, aiding ecosystem management and informed decision-making.</p>
+<p>In summary, this project underscores the University of Malaya’s ecosystem’s vital role in carbon sequestration, emphasizing the significance of satellite imagery and machine learning in environmental assessments and conservation endeavors.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">Copyright © 2023 Wang Huang Han.</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>

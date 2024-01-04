@@ -14,7 +14,6 @@ Heart disease is the world's leading cause of death, taking around 17.9 million 
 
 Diagnosing heart disease is complex, often relying on patient symptoms and examinations. Analyzing vast clinical data using data science helps us better understand and predict heart disease occurrence.
 
-
 ## Dataset
 
 -   [Heart Disease - UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/45/heart+disease)
@@ -25,7 +24,6 @@ Four of the processed files used in this project:
 2.  processed.cleveland.data
 3.  processed.hungarian.data
 4.  processed.va.data
-
 
 ## Project objectives
 
@@ -49,7 +47,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 ```
-
 
 ## Data loading
 
@@ -88,44 +85,38 @@ df
 
 **Categorical attributes**
 
-- `sex`- sex
-  - 1 = male
-  - 0 = female
-
-- `cp`- chest pain type
-  - 1 = typical angina
-  - 2 = atypical angina
-  - 3 = non-anginal pain
-  - 4 = asymptomatic
-  
-- `fbs` - fasting blood sugar > 120 mg/dl
-  - 1 = true
-  - 0 = false
-  
-- `restecg` - resting electrocardiographic (ECG) results
-  - 0 = normal
-  - 1 = having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)
-  - 2 = showing probable or definite left ventricular hypertrophy by Estes’ criteria
-
-- `exang` - exercise induced angina. Angina is a type of chest pain caused by reduced blood flow to the heart.
-  - 1 = yes
-  - 0 = no
-
-- `slope` - the slope of the peak exercise ST segment. (ECG)
-  - 1 = upsloping
-  - 2 = flat
-  - 3 = downsloping
-  
-- `thal` - A blood disorder called thalassemia
-  - 3 = normal blood flow
-  - 6 = fixed defect (no blood flow in some part of the heart)
-  - 7 = reversable defect (a blood flow is observed but it is not normal)
-
-- `disease` - refers to the presence of heart disease in the patient. It is integer valued from 0 (no presence) to 4. In this single dataset, '0' signifies the absence of heart disease, while '1' indicates diagnosed heart disease.
-
+-   `sex`- sex
+    -   1 = male
+    -   0 = female
+-   `cp`- chest pain type
+    -   1 = typical angina
+    -   2 = atypical angina
+    -   3 = non-anginal pain
+    -   4 = asymptomatic
+-   `fbs` - fasting blood sugar \> 120 mg/dl
+    -   1 = true
+    -   0 = false
+-   `restecg` - resting electrocardiographic (ECG) results
+    -   0 = normal
+    -   1 = having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of \> 0.05 mV)
+    -   2 = showing probable or definite left ventricular hypertrophy by Estes' criteria
+-   `exang` - exercise induced angina. Angina is a type of chest pain caused by reduced blood flow to the heart.
+    -   1 = yes
+    -   0 = no
+-   `slope` - the slope of the peak exercise ST segment. (ECG)
+    -   1 = upsloping
+    -   2 = flat
+    -   3 = downsloping
+-   `thal` - A blood disorder called thalassemia
+    -   3 = normal blood flow
+    -   6 = fixed defect (no blood flow in some part of the heart)
+    -   7 = reversable defect (a blood flow is observed but it is not normal)
+-   `disease` - refers to the presence of heart disease in the patient. It is integer valued from 0 (no presence) to 4. In this single dataset, '0' signifies the absence of heart disease, while '1' indicates diagnosed heart disease.
 
 ## Exploratory data analysis (EDA)
+
 ### Numeric data summary
+
 ```{python}
 # Summary statistics for numeric data
 numeric_cols = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak', 'ca']
@@ -145,17 +136,18 @@ for i, col in enumerate(numeric_cols, 1):
 plt.tight_layout()
 plt.show()
 ```
-- **Age:** The average age in the dataset is approximately 53 years, with most individuals falling between 47 and 60 years old. The youngest person is 28 years old, and the oldest is 77 years old.
 
-- **Resting Blood Pressure (trestbps):** The average resting blood pressure is around 132 mm Hg, with readings typically ranging from 120 to 140 mm Hg. However, there seem to be some unusually low values (minimum at 0) that might need further investigation.
+-   **Age:** The average age in the dataset is approximately 53 years, with most individuals falling between 47 and 60 years old. The youngest person is 28 years old, and the oldest is 77 years old.
 
-- **Cholesterol (chol):** The average cholesterol level is about 199 mg/dl, with most values spanning between 175 and 268 mg/dl. There are also some entries with cholesterol levels recorded as 0, which might need verification.
+-   **Resting Blood Pressure (trestbps):** The average resting blood pressure is around 132 mm Hg, with readings typically ranging from 120 to 140 mm Hg. However, there seem to be some unusually low values (minimum at 0) that might need further investigation.
 
-- **Maximum Heart Rate Achieved (thalach):** On average, the maximum heart rate achieved is approximately 138 bpm, with the majority falling between 120 and 157 bpm.
+-   **Cholesterol (chol):** The average cholesterol level is about 199 mg/dl, with most values spanning between 175 and 268 mg/dl. There are also some entries with cholesterol levels recorded as 0, which might need verification.
 
-- **ST Depression (oldpeak):** The ST depression induced by exercise relative to rest averages around 0.88. The values range from -2.6 to 6.2.
+-   **Maximum Heart Rate Achieved (thalach):** On average, the maximum heart rate achieved is approximately 138 bpm, with the majority falling between 120 and 157 bpm.
 
-- **Number of Major Vessels (ca):** There are fewer data points available for the number of major vessels. On average, it appears that the dataset has about 0.68 major vessels colored by fluoroscopy, with values ranging from 0 to 3.
+-   **ST Depression (oldpeak):** The ST depression induced by exercise relative to rest averages around 0.88. The values range from -2.6 to 6.2.
+
+-   **Number of Major Vessels (ca):** There are fewer data points available for the number of major vessels. On average, it appears that the dataset has about 0.68 major vessels colored by fluoroscopy, with values ranging from 0 to 3.
 
 **Generate a heatmap** to display the correlations between different numeric attributes in heart disease dataset, helping to identify potential relationships or dependencies between these features.
 
@@ -171,6 +163,7 @@ plt.show()
 ```
 
 ### Categorical data summary
+
 ```{python}
 # Categorical data summary with count plots
 categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal', 'disease']
@@ -185,6 +178,7 @@ for i, col in enumerate(categorical_cols, 1):
 plt.tight_layout()
 plt.show()
 ```
+
 ```{python}
 #| code-fold: true
 #| code-summary: "Counts for each categorical attribute"
@@ -197,23 +191,24 @@ plt.show()
 #    print()
 ```
 
-- **Sex:** There are 726 instances of the value 1.0 (male) and 194 instances of the value 0.0 (female) in the 'sex' column.
+-   **Sex:** There are 726 instances of the value 1.0 (male) and 194 instances of the value 0.0 (female) in the 'sex' column.
 
-- **Chest Pain Type (cp):** 496 instances of type 4 (asymptomatic), 204 instances of type 3 (non-anginal pain), 174 instances of type 2 (atypical angina), and 46 instances of type 1 (typical angina).
+-   **Chest Pain Type (cp):** 496 instances of type 4 (asymptomatic), 204 instances of type 3 (non-anginal pain), 174 instances of type 2 (atypical angina), and 46 instances of type 1 (typical angina).
 
-- **Fasting Blood Sugar (fbs):** 692 instances with a value of 0.0 (fasting blood sugar <= 120 mg/dl) and 138 instances with a value of 1.0 (fasting blood sugar > 120 mg/dl).
+-   **Fasting Blood Sugar (fbs):** 692 instances with a value of 0.0 (fasting blood sugar \<= 120 mg/dl) and 138 instances with a value of 1.0 (fasting blood sugar \> 120 mg/dl).
 
-- **Resting Electrocardiographic Results (restecg):** 551 instances with a value of 0.0 (normal), 188 instances with a value of 2.0 (showing probable or definite left ventricular hypertrophy by Estes’ criteria), and 179 instances with a value of 1.0 (having ST-T wave abnormality).
+-   **Resting Electrocardiographic Results (restecg):** 551 instances with a value of 0.0 (normal), 188 instances with a value of 2.0 (showing probable or definite left ventricular hypertrophy by Estes' criteria), and 179 instances with a value of 1.0 (having ST-T wave abnormality).
 
-- **Exercise Induced Angina (exang):** 528 instances with a value of 0.0 (no exercise-induced angina) and 337 instances with a value of 1.0 (presence of exercise-induced angina).
+-   **Exercise Induced Angina (exang):** 528 instances with a value of 0.0 (no exercise-induced angina) and 337 instances with a value of 1.0 (presence of exercise-induced angina).
 
-- **Slope of Peak Exercise ST Segment (slope):** 345 instances with a value of 2.0 (a flat slope), 203 instances with a value of 1.0 (an upsloping slope), and 63 instances with a value of 3.0 (a downsloping slope).
+-   **Slope of Peak Exercise ST Segment (slope):** 345 instances with a value of 2.0 (a flat slope), 203 instances with a value of 1.0 (an upsloping slope), and 63 instances with a value of 3.0 (a downsloping slope).
 
-- **Thalassemia (thal):** 196 instances with a value of 3.0 (normal blood flow), 192 instances with a value of 7.0 (reversible defect), and 46 instances with a value of 6.0 (fixed defect).
+-   **Thalassemia (thal):** 196 instances with a value of 3.0 (normal blood flow), 192 instances with a value of 7.0 (reversible defect), and 46 instances with a value of 6.0 (fixed defect).
 
-- **Presence of Heart Disease (disease):** 509 instances with a value of 1 (presence of heart disease) and 411 instances with a value of 0 (absence of heart disease).
+-   **Presence of Heart Disease (disease):** 509 instances with a value of 1 (presence of heart disease) and 411 instances with a value of 0 (absence of heart disease).
 
 ### Different risk factors affect heart disease
+
 ```{python}
 # Display boxplots for each numerical attribute and presence of heart disease 
 plt.figure(figsize=(12, 10))
@@ -226,6 +221,7 @@ for i, col in enumerate(numeric_cols, 1):
 plt.tight_layout()
 plt.show()
 ```
+
 ```{python}
 # Grouping by 'disease' and describing numeric attributes
 numeric_summary = df.groupby('disease')[numeric_cols].describe().transpose()
@@ -239,19 +235,19 @@ print(numeric_summary)
 
 **From numerical attributes:**
 
-- **Age:** Individuals with heart disease tend to be older on average compared to those without. The median age for individuals with heart disease (57 years) is higher than for those without (51 years).
+-   **Age:** Individuals with heart disease tend to be older on average compared to those without. The median age for individuals with heart disease (57 years) is higher than for those without (51 years).
 
-- **Resting Blood Pressure (trestbps):** While the mean resting blood pressure appears slightly higher for individuals with heart disease, there's overlap in the interquartile ranges, suggesting variability. However, there seem to be some unusual zero values for blood pressure in the heart disease group that might need further examination.
+-   **Resting Blood Pressure (trestbps):** While the mean resting blood pressure appears slightly higher for individuals with heart disease, there's overlap in the interquartile ranges, suggesting variability. However, there seem to be some unusual zero values for blood pressure in the heart disease group that might need further examination.
 
-- **Cholesterol (chol):** There's a notable difference in cholesterol levels between the two groups. Individuals without heart disease have higher median cholesterol levels (228 mg/dl) compared to those with heart disease (218 mg/dl). However, there are zero values present in both groups that might need clarification.
+-   **Cholesterol (chol):** There's a notable difference in cholesterol levels between the two groups. Individuals without heart disease have higher median cholesterol levels (228 mg/dl) compared to those with heart disease (218 mg/dl). However, there are zero values present in both groups that might need clarification.
 
-- **Maximum Heart Rate Achieved (thalach):** Those without heart disease generally achieve higher maximum heart rates compared to those with heart disease. The median maximum heart rate for individuals without heart disease (151 bpm) is higher than for those with heart disease (128 bpm).
+-   **Maximum Heart Rate Achieved (thalach):** Those without heart disease generally achieve higher maximum heart rates compared to those with heart disease. The median maximum heart rate for individuals without heart disease (151 bpm) is higher than for those with heart disease (128 bpm).
 
-- **ST Depression (oldpeak):** The magnitude of ST depression induced by exercise relative to rest appears significantly higher in individuals with heart disease. The median ST depression for those with heart disease (1.05) is notably greater compared to those without heart disease (0).
+-   **ST Depression (oldpeak):** The magnitude of ST depression induced by exercise relative to rest appears significantly higher in individuals with heart disease. The median ST depression for those with heart disease (1.05) is notably greater compared to those without heart disease (0).
 
-- **Number of Major Vessels (ca):** Individuals with heart disease tend to have a higher number of major vessels colored by fluoroscopy. The median number of major vessels for those with heart disease (1) is higher than for those without heart disease (0).
+-   **Number of Major Vessels (ca):** Individuals with heart disease tend to have a higher number of major vessels colored by fluoroscopy. The median number of major vessels for those with heart disease (1) is higher than for those without heart disease (0).
 
-- **Outliers:** In 'trestbps' and 'chol' columns, 'trestbps' displays an outlier with a minimum value of 0, while 'chol' has outliers represented by zero values in both categories, which may require further investigation due to their deviation from expected physiological ranges.
+-   **Outliers:** In 'trestbps' and 'chol' columns, 'trestbps' displays an outlier with a minimum value of 0, while 'chol' has outliers represented by zero values in both categories, which may require further investigation due to their deviation from expected physiological ranges.
 
 ```{python}
 # Generate stacked barcharts for each categorical value compared to heart disease
@@ -284,43 +280,46 @@ plt.show()
 
 **From categorical attributes:**
 
-- **Sex:** Females (sex=0) show a lower percentage of heart disease (25.77%) compared to males (sex=1) with a higher percentage (63.22%).
+-   **Sex:** Females (sex=0) show a lower percentage of heart disease (25.77%) compared to males (sex=1) with a higher percentage (63.22%).
 
-- **Chest Pain Type (Cp):** Asymptomatic chest pain type (cp=4) displays a significantly higher percentage (79.03%) of heart disease, while typical angina (cp=1) has a lower percentage (43.48%).
+-   **Chest Pain Type (Cp):** Asymptomatic chest pain type (cp=4) displays a significantly higher percentage (79.03%) of heart disease, while typical angina (cp=1) has a lower percentage (43.48%).
 
-- **Fasting Blood Sugar (Fbs):** Individuals with fasting blood sugar greater than 120 mg/dl (fbs=1) tend to have a notably higher percentage (68.12%) of heart disease compared to those with lower fasting blood sugar.
+-   **Fasting Blood Sugar (Fbs):** Individuals with fasting blood sugar greater than 120 mg/dl (fbs=1) tend to have a notably higher percentage (68.12%) of heart disease compared to those with lower fasting blood sugar.
 
-- **Exercise Induced Angina (Exang):** Individuals experiencing exercise-induced angina (exang=1) demonstrate a notably higher percentage (83.68%) of heart disease compared to those without it.
+-   **Exercise Induced Angina (Exang):** Individuals experiencing exercise-induced angina (exang=1) demonstrate a notably higher percentage (83.68%) of heart disease compared to those without it.
 
-- **Thalassemia (Thal):** Reversible defect thalassemia (thal=7) shows a higher percentage (80.21%) of heart disease compared to other types of thalassemia.
+-   **Thalassemia (Thal):** Reversible defect thalassemia (thal=7) shows a higher percentage (80.21%) of heart disease compared to other types of thalassemia.
 
 ### Summary of EDA
+
 Insights from the Exploratory Data Analysis:
 
-- **Age Factor:** Individuals diagnosed with heart disease tend to be older than those without the condition, suggesting age as a contributing risk factor for heart disease.
+-   **Age Factor:** Individuals diagnosed with heart disease tend to be older than those without the condition, suggesting age as a contributing risk factor for heart disease.
 
-- **Chest Pain Types:** Asymptomatic chest pain (cp=4) presents a notably higher prevalence of heart disease, while typical angina (cp=1) exhibits a lower association with heart conditions.
+-   **Chest Pain Types:** Asymptomatic chest pain (cp=4) presents a notably higher prevalence of heart disease, while typical angina (cp=1) exhibits a lower association with heart conditions.
 
-- **Cholesterol and Heart Disease:** While cholesterol levels vary, individuals without heart disease often exhibit higher median cholesterol levels than those with the condition, although zero values in both groups require further validation.
+-   **Cholesterol and Heart Disease:** While cholesterol levels vary, individuals without heart disease often exhibit higher median cholesterol levels than those with the condition, although zero values in both groups require further validation.
 
-- **Exercise-Induced Angina:** The presence of exercise-induced angina (exang=1) demonstrates a significantly higher likelihood of heart disease compared to its absence (exang=0).
+-   **Exercise-Induced Angina:** The presence of exercise-induced angina (exang=1) demonstrates a significantly higher likelihood of heart disease compared to its absence (exang=0).
 
-- **Gender Disparity:** Males (sex=1) tend to show a higher percentage of heart disease cases (63.22%) compared to females (sex=0) with a lower prevalence (25.77%).
+-   **Gender Disparity:** Males (sex=1) tend to show a higher percentage of heart disease cases (63.22%) compared to females (sex=0) with a lower prevalence (25.77%).
 
-- **Fasting Blood Sugar (FBS):** Elevated fasting blood sugar (>120 mg/dl) correlates with a higher percentage of heart disease instances (68.12%) compared to lower levels.
+-   **Fasting Blood Sugar (FBS):** Elevated fasting blood sugar (\>120 mg/dl) correlates with a higher percentage of heart disease instances (68.12%) compared to lower levels.
 
-- **Resting Blood Pressure and Heart Disease:** Resting blood pressure, though variable, shows a trend toward higher values for heart disease cases, though outliers (0 values) necessitate further investigation.
-
+-   **Resting Blood Pressure and Heart Disease:** Resting blood pressure, though variable, shows a trend toward higher values for heart disease cases, though outliers (0 values) necessitate further investigation.
 
 ## Data preparation
+
 ### Find incorrect values
-1. Cholesterol (chol) contains lots of zero values.
 
-2. ST Depression (oldpeak) gets some negetive values.
+1.  Cholesterol (chol) contains lots of zero values.
 
-3. Resting Blood Pressure (trestbps) has one zero value.
+2.  ST Depression (oldpeak) gets some negetive values.
+
+3.  Resting Blood Pressure (trestbps) has one zero value.
 
 **Count and plot those incorrect (missing) values.**
+
 ```{python}
 # Create a copy of the dataframe to handle missing values
 df_missing = df.copy()
@@ -350,8 +349,11 @@ plt.show()
 # Display the count and percentage of missing/incorrect values
 print(na_values_percent)
 ```
+
 ### Data cleaning
+
 Set incorrect values to NaN and find out duplicate values to remove.
+
 ```{python}
 # Create a copy of the dataframe to handle missing values and duplicates
 df_clean = df.copy()
@@ -378,9 +380,10 @@ print("\nMissing Values After Cleaning:")
 print(df_clean.isnull().sum())
 ```
 
-
 ## Feature engineering
+
 ### Data imputation
+
 ```{python}
 # Columns for mode imputation
 mode_cols = ['restecg', 'exang', 'fbs', 'slope', 'thal']
@@ -400,15 +403,19 @@ df_clean[median_cols] = median_imputer.fit_transform(df_clean[median_cols])
 print("Missing Values After Imputation:")
 print(df_clean.isnull().sum())
 ```
+
 ```{python}
 # Check the number of rows after data imputation
 num_rows_after_imputation = df_clean.shape[0]
 print(f"Number of rows after data imputation: {num_rows_after_imputation}")
 ```
+
 The total number of rows before the data split was 920. Since only two duplicate rows were removed, the remaining rows became 918.
 
 ### One-hot encoding
+
 It's important to apply One-Hot Encoding before splitting data into training and testing sets. Doing this ensures that each set is independently encoded, preventing any mixing of information between them. This separation is important because it helps the model learn and make predictions correctly without being influenced by how the data was divided.
+
 ```{python}
 # Categorical columns for one-hot encoding
 categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal']
@@ -421,12 +428,13 @@ print(df_encoded.head())
 ```
 
 ### Feature scaling & Split dataset
-**Normalization / Standardization**
-While ML algorithms like Random Forest, linear regression, logistic regression, and neural networks don't require scaling, it's crucial for Distance algorithms such as KNN, K-means, and SVM.
+
+**Normalization / Standardization** While ML algorithms like Random Forest, linear regression, logistic regression, and neural networks don't require scaling, it's crucial for Distance algorithms such as KNN, K-means, and SVM.
 
 To accommodate this, I'll split the dataset: one portion for KNN and logistic regression, where normalization is employed, and another for RF modeling, where scaling isn't necessary.
 
 **70% for Train & 30% for Test**
+
 ```{python}
 # Select numerical attributes for scaling
 numerical_cols = ['age', 'oldpeak', 'chol', 'thalach', 'trestbps']
@@ -458,29 +466,34 @@ X_train_knn_logreg[numerical_cols] = X_train_scaled
 X_test_knn_logreg[numerical_cols] = X_test_scaled
 ```
 
-
 ## Modeling
+
 ### K-Nearest Neighbors (KNN)
+
 ```{python}
 knn = KNeighborsClassifier()
 knn.fit(X_train_knn_logreg, y_train)
 y_pred_knn = knn.predict(X_test_knn_logreg)
 ```
+
 ### Logistic Regression
+
 ```{python}
 log_reg = LogisticRegression()
 log_reg.fit(X_train_knn_logreg, y_train)
 y_pred_log_reg = log_reg.predict(X_test_knn_logreg)
 ```
+
 ### Random Forest (data used without scaling)
+
 ```{python}
 rf = RandomForestClassifier(random_state=37)
 rf.fit(X_train, y_train)
 y_pred_rf = rf.predict(X_test)
 ```
 
-
 ## Evaluation models performance
+
 ```{python}
 models = {
     "KNN": (y_test, y_pred_knn),
@@ -527,30 +540,30 @@ plot_confusion(y_test, y_pred_rf, 'Confusion Matrix - Random Forest')
 
 **The table display the model evaluation comparison.**
 
-| Model                | Accuracy | Recall | Precision | F1 Score | AUC Score |
-|----------------------|----------|--------|-----------|----------|-----------|
-| KNN                  | 0.8043   | 0.8954 | 0.7829    | 0.8354   | 0.7932    |
-| Logistic Regression  | 0.7935   | 0.8693 | 0.7824    | 0.8235   | 0.7842    |
-| **Random Forest**    |**0.8152**| 0.8758 | 0.8072    | 0.8401   | 0.8078    |
+| Model               | Accuracy   | Recall | Precision | F1 Score | AUC Score |
+|---------------------|------------|--------|-----------|----------|-----------|
+| KNN                 | 0.8043     | 0.8954 | 0.7829    | 0.8354   | 0.7932    |
+| Logistic Regression | 0.7935     | 0.8693 | 0.7824    | 0.8235   | 0.7842    |
+| **Random Forest**   | **0.8152** | 0.8758 | 0.8072    | 0.8401   | 0.8078    |
 
-- Accuracy Comparison: Random Forest achieved the highest accuracy (81.52%), outperforming both KNN (80.43%) and Logistic Regression (79.35%).
+-   Accuracy Comparison: Random Forest achieved the highest accuracy (81.52%), outperforming both KNN (80.43%) and Logistic Regression (79.35%).
 
-- Precision and Recall: Random Forest and KNN showed similar recall rates of 87.58%, signifying their proficiency in capturing positive cases. However, Random Forest showcased superior precision at 80.72% compared to KNN's 78.29% and Logistic Regression's 78.24%. This highlights Random Forest's better balance between precision and recall in correctly identifying positive cases while minimizing false positives.
+-   Precision and Recall: Random Forest and KNN showed similar recall rates of 87.58%, signifying their proficiency in capturing positive cases. However, Random Forest showcased superior precision at 80.72% compared to KNN's 78.29% and Logistic Regression's 78.24%. This highlights Random Forest's better balance between precision and recall in correctly identifying positive cases while minimizing false positives.
 
-- F1 Score: Random Forest yielded the highest F1 score (84.01%), signifying a balanced performance between precision and recall, followed by KNN (83.54%) and Logistic Regression (82.35%).
+-   F1 Score: Random Forest yielded the highest F1 score (84.01%), signifying a balanced performance between precision and recall, followed by KNN (83.54%) and Logistic Regression (82.35%).
 
-- AUC Score: Random Forest had the highest AUC score (80.78%), indicating its capability to distinguish between classes better than KNN (79.32%) and Logistic Regression (78.42%).
+-   AUC Score: Random Forest had the highest AUC score (80.78%), indicating its capability to distinguish between classes better than KNN (79.32%) and Logistic Regression (78.42%).
 
-- **Random Forest Model:** Overall, Random Forest demonstrated superior performance across multiple metrics, showcasing its robustness in predicting heart disease compared to the other models.
-
+-   **Random Forest Model:** Overall, Random Forest demonstrated superior performance across multiple metrics, showcasing its robustness in predicting heart disease compared to the other models.
 
 ## Conclusion
-- Employing KNN, Logistic Regression, and Random Forest algorithms, models were constructed to predict heart disease with accuracies ranging between 79.35% and 81.52%. Notably, the Random Forest model emerged as the most effective model, exhibiting an accuracy of 81.52% and an F1 score of 84.01%, showcasing its robustness in identifying heart disease cases.
 
-- Through comprehensive exploratory data analysis (EDA), important insights were revealed. Factors such as age, chest pain type, cholesterol levels, and exercise-induced angina showed notable correlations with the presence of heart disease. Visualizing these relationships aided in understanding risk factors associated with heart conditions.
+-   Employing KNN, Logistic Regression, and Random Forest algorithms, models were constructed to predict heart disease with accuracies ranging between 79.35% and 81.52%. Notably, the Random Forest model emerged as the most effective model, exhibiting an accuracy of 81.52% and an F1 score of 84.01%, showcasing its robustness in identifying heart disease cases.
 
-- The data preparation phase involved handling missing values, erroneous entries, and duplicates. Feature engineering encompassed imputation of missing values, one-hot encoding for categorical variables, and scaling for suitable algorithms, ensuring the data was ready for modeling.
+-   Through comprehensive exploratory data analysis (EDA), important insights were revealed. Factors such as age, chest pain type, cholesterol levels, and exercise-induced angina showed notable correlations with the presence of heart disease. Visualizing these relationships aided in understanding risk factors associated with heart conditions.
 
-- The significance of various attributes in predicting heart disease was evident. Numeric attributes like age, cholesterol levels, and ST depression were influential, while categorical features such as chest pain type and thalassemia also played crucial roles. Random Forest, exhibiting superior performance, emphasized the importance of these features in predicting heart disease.
+-   The data preparation phase involved handling missing values, erroneous entries, and duplicates. Feature engineering encompassed imputation of missing values, one-hot encoding for categorical variables, and scaling for suitable algorithms, ensuring the data was ready for modeling.
 
-- The project's success in predictive modeling offers potential clinical implications. These models can aid healthcare practitioners by providing insights into patient risk factors for heart disease. However, further refinement through hyperparameter tuning and larger datasets could enhance predictive accuracy, paving the way for more reliable clinical decision support systems.
+-   The significance of various attributes in predicting heart disease was evident. Numeric attributes like age, cholesterol levels, and ST depression were influential, while categorical features such as chest pain type and thalassemia also played crucial roles. Random Forest, exhibiting superior performance, emphasized the importance of these features in predicting heart disease.
+
+-   The project's success in predictive modeling offers potential clinical implications. These models can aid healthcare practitioners by providing insights into patient risk factors for heart disease. However, further refinement through hyperparameter tuning and larger datasets could enhance predictive accuracy, paving the way for more reliable clinical decision support systems.
